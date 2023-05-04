@@ -1,0 +1,27 @@
+{
+  "name": "movie_site_mine",
+  "version": "1.0.0",
+  "description": "films page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/zenuaa/Movie_site_MINE.git"
+  },
+  "keywords": [
+    "movie",
+    "film",
+    "zenua"
+  ],
+  "author": "zenua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zenuaa/Movie_site_MINE/issues"
+  },
+  "homepage": "https://github.com/zenuaa/Movie_site_MINE#readme",
+  "devDependencies": {
+    "eslint": "^8.39.0"
+  }
+}
