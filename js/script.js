@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         inputSearch.style.width = `${getBodyWidth / 2}px`;
 
-        filmElement.style.background = "url('../image/mars_mob.webp') center / cover no-repeat";
+        filmElement.style.background = "url('Movie_site_MINE/image/mars_mob.webp') center / cover no-repeat";
         filmElement.style.minWidth = '50px';
         filmElement.style.marginTop = '2px';
         filmElement.style.width = `${getBodyWidth}px`;
