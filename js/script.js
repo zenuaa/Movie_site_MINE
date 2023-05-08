@@ -24,3 +24,133 @@ const movieDB = {
     ]
 };
 
+document.addEventListener('DOMContentLoaded', function () {
+    const getBodyWidth = document.body.clientWidth;
+    const getElem = (id) => {
+        const elem = document.querySelector(id);
+        return elem;
+    };
+    const headerElement = getElem('header'),
+        headerSearch = getElem('.header_search'),
+        formSearch = getElem('.form_search'),
+        inputSearch = getElem('#input_search'),
+        h1Element = getElem('h1'),
+
+        mainElement = getElem('main'),
+        navMenu = getElem('.nav_menu'),
+        navUl = getElem('nav ul'),
+        wrapElement = getElem('.wrap'),
+        filmElement = getElem('.film'),
+
+        articleElement = getElem('article'),
+        adElements = document.querySelectorAll('.ad'),
+        ad_arr = [];
+
+    adElements.forEach(item => {
+        ad_arr.push(item.children[0])
+    })
+
+    if (getBodyWidth <= 650) { // mobile
+
+        inputSearch.style.width = `${getBodyWidth / 2}px`;
+
+        filmElement.style.background = "url('../image/mars_mob.webp') center / cover no-repeat";
+        filmElement.style.minWidth = '50px';
+        filmElement.style.marginTop = '2px';
+        filmElement.style.width = `${getBodyWidth}px`;
+
+        navUl.style.minHeight = 'auto';
+        navUl.style.width = `${getBodyWidth}px`;
+        navUl.style.alignItems = 'center';
+
+        headerElement.style.flexDirection = 'column';
+        headerSearch.style.width = `${getBodyWidth}px`;
+
+        mainElement.style.flexDirection = 'column';
+
+        articleElement.style.flexDirection = 'row';
+        articleElement.style.justifyContent = 'space-around'
+
+    }
+
+    if (getBodyWidth > 650 && getBodyWidth < 974) { //tablet
+        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.3}px`;
+        filmElement.style.minWidth = '444px';
+        const calcWrapWidth = () => {
+            const availableWidth = getBodyWidth - `${navMenu.clientWidth}` - 6;
+            return `${availableWidth}px`;
+        }
+        const updateWidth = () => {
+            let availableWidth = calcWrapWidth();
+            filmElement.style.width = (parseFloat(availableWidth)) + 'px';
+            setTimeout(() => {      //убираем баг лишних 15рх
+                if (wrapElement.offsetTop !== navMenu.offsetTop) {
+                    filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+
+                }
+            }, 100);
+        };
+
+        window.addEventListener('load', updateWidth);
+
+        // инициализация ширины при загрузке страницы
+        updateWidth();
+
+        articleElement.style.flexDirection = 'row';
+        articleElement.style.width = `${getBodyWidth}px`;
+        articleElement.style.marginTop = '3px';
+        articleElement.style.justifyContent = 'space-around';
+
+        formSearch.style.height = '100px';
+        formSearch.style.width = `${getBodyWidth / 4}px`;
+
+        mainElement.style.justifyContent = 'flex-start';
+
+        wrapElement.style.marginLeft = '3px';
+
+        headerSearch.style.width = `${getBodyWidth / 4}px`;
+
+        inputSearch.style.width = `${getBodyWidth / 6}px`;
+
+    }
+
+    if (getBodyWidth >= 974) { //desktop
+        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.4}px`;
+        const calcWrapWidth = () => {
+            const availableWidth = getBodyWidth - `${navMenu.clientWidth + articleElement.clientWidth}` - 6;
+            return `${availableWidth}px`;
+
+        }
+
+        const updateWidth = () => {
+            let availableWidth = calcWrapWidth();
+            filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+            setTimeout(() => {      //убираем баг лишних 15рх
+                if (wrapElement.offsetTop !== articleElement.offsetTop) {
+                    availableWidth = (parseFloat(availableWidth) - 15) + 'px';
+                    filmElement.style.width = availableWidth;
+                }
+            }, 100);
+            filmElement.style.width = availableWidth;
+
+        };
+
+        window.addEventListener('load', updateWidth);
+
+        // инициализация ширины при загрузке страницы
+        updateWidth();
+    }
+
+    // // удаление рекламы что не влазит в стоку !!!!!!!!!! не пашет нормально доделать
+    setTimeout(() => {
+        if (getBodyWidth < 810 && getBodyWidth > 600) {
+            articleElement.style.width = '599px';
+            articleElement.style.margin = '3px auto';
+
+
+        }
+    }, 1000);
+
+
+});
+
