@@ -229,7 +229,7 @@ main article{
 
     .film {
         display: block;
-        background: url("../image/mars_mob.webp") center / cover no-repeat;
+        /*background: url("../image/mars_mob.webp") center / cover no-repeat; */
 
     }
 
