@@ -85,11 +85,11 @@ main {
 
 
 nav {
-    background: linear-gradient(to left, rgba(211, 211, 189, 0.171), rgba(149, 177, 23, 0.199));
+    background-color: rgb(61, 57, 57);
     min-width: 200px;
 }
 
-ul {
+nav ul {
     min-height: 500px;
     background-color: rgb(61, 57, 57);
     margin-top: 0;
@@ -103,18 +103,18 @@ ul {
     padding-right: 20px;
 }
 
-li {
+nav li {
     text-decoration: white;
     margin-bottom: 7px;
     padding-left: 20px;
 }
 
-li a {
+nav li a {
     margin-left: -10px;
 
 }
 
-li:hover {
+nav li:hover {
     list-style-type: "\1F37F";
 }
 
@@ -130,8 +130,15 @@ a:hover {
     color: rgb(255, 217, 0);
 }
 
+main .wrap{
+    display: flex;
+    flex-direction: column;
+}
 
 div .film {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-between; */
     min-width: 568px;
     min-height: 500px;
     background: url("../image/mars.webp") center/cover no-repeat;
@@ -154,21 +161,70 @@ div .film {
     text-transform: uppercase;
 }
 .film_descr{
-    width: 481px;
     font-weight: bold;
     font-size: 18px;
     line-height: 21px;
     color: #FFFFFF;
     text-transform: uppercase;
 }
+.descrText{
+    max-width: 100%;
+    font-weight: 400;
+    padding: 0 20px;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    text-transform: none;
+}
 .film_ratings{
     margin-top: 13px;
 }
-.film_ratings span{    font-weight: bold;
+.film_ratings span{    
+    font-weight: bold;
     font-size: 18px;
     line-height: 21px;
     color: #FFD500;
-    margin-right: 25px;}
+    margin-right: 25px;
+}
+
+main .customize{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /* align-items: stretch; */
+    padding: 0 20px;
+
+}
+
+.customize h4{
+   margin: 0 auto ;
+}
+.customize fieldset{
+    margin-top: 15px;
+}
+
+#movie_name{
+    margin-top: 5px;
+    margin-bottom: 12px;
+}
+
+#yes{
+    margin-left: 0;
+}
+
+#no{
+    margin-left: 15px;
+    margin-top: 5px;    
+}
+
+.customize [type="submit"]{
+    margin-top: 10px ;  
+}
+
+.customize .db{
+    flex-grow: 1;
+    margin-bottom: 3px;
+
+}
+
 main article {
     display: flex;
     flex-wrap: wrap;

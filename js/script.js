@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
         navUl = getElem('nav ul'),
         wrapElement = getElem('.wrap'),
         filmElement = getElem('.film'),
-
+        filmDescr = getElem('.film_descr'),
+        
         articleElement = getElem('article'),
         adElements = document.querySelectorAll('.ad'),
         ad_arr = [];
@@ -51,22 +52,24 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     if (getBodyWidth <= 650) { // mobile
-
+        
+        headerElement.style.flexDirection = 'column';
+        headerSearch.style.width = `${getBodyWidth}px`;
         inputSearch.style.width = `${getBodyWidth / 2}px`;
-
-        filmElement.style.background = "url('./image/mars_mob.webp') center / cover no-repeat";
-        filmElement.style.minWidth = '50px';
-        filmElement.style.marginTop = '2px';
-        filmElement.style.width = `${getBodyWidth}px`;
 
         navUl.style.minHeight = 'auto';
         navUl.style.width = `${getBodyWidth}px`;
         navUl.style.alignItems = 'center';
-
-        headerElement.style.flexDirection = 'column';
-        headerSearch.style.width = `${getBodyWidth}px`;
-
+        
         mainElement.style.flexDirection = 'column';
+
+        filmElement.style.background = "url('./image/mars_mob.webp') center / cover no-repeat";
+        filmElement.style.minWidth = '50px';
+        filmElement.style.marginTop = '2px';
+        // filmElement.style.width = `${getBodyWidth}px`;
+        wrapElement.style.width = `${getBodyWidth}px`;
+
+        filmDescr.style.maxWidth = '640px';
 
         articleElement.style.flexDirection = 'row';
         articleElement.style.justifyContent = 'space-around'
@@ -75,17 +78,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (getBodyWidth > 650 && getBodyWidth < 974) { //tablet
         h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.3}px`;
-        filmElement.style.minWidth = '444px';
+        // filmElement.style.minWidth = '444px';
+        wrapElement.style.minWidth = '444px';
         const calcWrapWidth = () => {
             const availableWidth = getBodyWidth - `${navMenu.clientWidth}` - 6;
             return `${availableWidth}px`;
         }
         const updateWidth = () => {
             let availableWidth = calcWrapWidth();
-            filmElement.style.width = (parseFloat(availableWidth)) + 'px';
+            // filmElement.style.width = (parseFloat(availableWidth)) + 'px';
+            wrapElement.style.width = (parseFloat(availableWidth)) + 'px';
             setTimeout(() => {      //убираем баг лишних 15рх
                 if (wrapElement.offsetTop !== navMenu.offsetTop) {
-                    filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+                    // filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+                    wrapElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
 
                 }
             }, 100);
@@ -95,27 +101,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // инициализация ширины при загрузке страницы
         updateWidth();
+        
+        headerSearch.style.width = `${getBodyWidth / 4}px`;
+
+        formSearch.style.height = '100px';
+        formSearch.style.width = `${getBodyWidth / 4}px`;
+        
+        inputSearch.style.width = `${getBodyWidth / 6}px`;
+
+        mainElement.style.justifyContent = 'flex-start';
+
+        wrapElement.style.marginLeft = '3px';
 
         articleElement.style.flexDirection = 'row';
         articleElement.style.width = `${getBodyWidth}px`;
         articleElement.style.marginTop = '3px';
         articleElement.style.justifyContent = 'space-around';
 
-        formSearch.style.height = '100px';
-        formSearch.style.width = `${getBodyWidth / 4}px`;
-
-        mainElement.style.justifyContent = 'flex-start';
-
-        wrapElement.style.marginLeft = '3px';
-
-        headerSearch.style.width = `${getBodyWidth / 4}px`;
-
-        inputSearch.style.width = `${getBodyWidth / 6}px`;
-
     }
 
     if (getBodyWidth >= 974) { //desktop
         h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.4}px`;
+
         const calcWrapWidth = () => {
             const availableWidth = getBodyWidth - `${navMenu.clientWidth + articleElement.clientWidth}` - 6;
             return `${availableWidth}px`;
@@ -124,14 +131,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const updateWidth = () => {
             let availableWidth = calcWrapWidth();
-            filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+            // filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+            wrapElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
             setTimeout(() => {      //убираем баг лишних 15рх
                 if (wrapElement.offsetTop !== articleElement.offsetTop) {
                     availableWidth = (parseFloat(availableWidth) - 15) + 'px';
-                    filmElement.style.width = availableWidth;
+                    // filmElement.style.width = availableWidth;
+                    wrapElement.style.width = availableWidth;
+
                 }
             }, 100);
-            filmElement.style.width = availableWidth;
+            // filmElement.style.width = availableWidth;
+            wrapElement.style.width = availableWidth;
+
 
         };
 
