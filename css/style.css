@@ -225,6 +225,44 @@ main .customize{
 
 }
 
+.db ol {
+    list-style-type: decimal;
+    /* padding-left: ; */
+    counter-reset: my-counter;/* сбросить счетчик */
+     
+}
+.db li {
+  padding-bottom: 5px;
+  padding-right: 0;
+  display: inline-block;
+  counter-increment: my-counter; /* увеличить счетчик */
+}
+li:before {
+  content: counter(my-counter) '.'; /* отобразить значение счетчика */
+  display: inline-block;
+  width: 1em;
+  margin-right: 0.5em;
+  text-align: right;
+}
+.db li:hover {
+color:rgb(19, 38, 124);
+text-decoration: underline;  
+cursor: pointer;
+}
+
+.db img{
+    /* display: none; */
+    margin-top: -4px;
+    margin-left: 10px;
+    vertical-align: middle;
+
+}
+
+.hide{
+    display: none;
+}
+
+
 main article {
     display: flex;
     flex-wrap: wrap;

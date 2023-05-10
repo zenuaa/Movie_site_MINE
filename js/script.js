@@ -24,35 +24,90 @@ const movieDB = {
     ]
 };
 
+const getBodyWidth = document.body.clientWidth;
+const getElem = (id) => {
+    const elem = document.querySelector(id);
+    return elem;
+};
+
+const getElemS = (id) => {
+    const elem = document.querySelectorAll(id);
+    return elem;
+};
+const headerElement = getElem('header'),
+    headerSearch = getElem('.header_search'),
+    formSearch = getElem('.form_search'),
+    inputSearch = getElem('#input_search'),
+    h1Element = getElem('h1'),
+
+    mainElement = getElem('main'),
+    navMenu = getElem('.nav_menu'),
+    navUl = getElem('nav ul'),
+    wrapElement = getElem('.wrap'),
+    filmElement = getElem('.film'),
+    filmDescr = getElem('.film_descr'),
+
+    dbOl = getElem('.db ol'),
+    dbLiList = getElemS('.db li'),
+    dbImgList = getElemS('.db img'),
+    customizeElement = getElem('.customize'),
+    imgTrash = getElem('ol img'),
+    imgTrashList = getElemS('ol img'),
+
+    articleElement = getElem('article'),
+    adElements = getElemS('.ad'),
+    ad_arr = [];
+
+adElements.forEach(item => {
+    ad_arr.push(item.children[0])
+})
+let lastClickedItemIndex = null;
+
+const toggleTrashImage = (itemIndex) => {
+    imgTrashList[itemIndex].classList.toggle('hide');
+};
+
+const hideLastClickedItemTrashImage = () => {
+    if (lastClickedItemIndex !== null) {
+        toggleTrashImage(lastClickedItemIndex);
+        lastClickedItemIndex = null;
+    }
+};
+
+const handleListItemClick = (e) => {
+    const itemIndex = Array.from(dbLiList).indexOf(e.target);
+
+    if (itemIndex !== lastClickedItemIndex) {
+        hideLastClickedItemTrashImage();
+        toggleTrashImage(itemIndex);
+        lastClickedItemIndex = itemIndex;
+    } else {
+        toggleTrashImage(itemIndex);
+        lastClickedItemIndex = null;
+    }
+};
+
+Array.from(dbOl.children).forEach((item) => {
+    item.addEventListener('click', handleListItemClick);
+});
+
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
-    const getBodyWidth = document.body.clientWidth;
-    const getElem = (id) => {
-        const elem = document.querySelector(id);
-        return elem;
-    };
-    const headerElement = getElem('header'),
-        headerSearch = getElem('.header_search'),
-        formSearch = getElem('.form_search'),
-        inputSearch = getElem('#input_search'),
-        h1Element = getElem('h1'),
 
-        mainElement = getElem('main'),
-        navMenu = getElem('.nav_menu'),
-        navUl = getElem('nav ul'),
-        wrapElement = getElem('.wrap'),
-        filmElement = getElem('.film'),
-        filmDescr = getElem('.film_descr'),
-        
-        articleElement = getElem('article'),
-        adElements = document.querySelectorAll('.ad'),
-        ad_arr = [];
-
-    adElements.forEach(item => {
-        ad_arr.push(item.children[0])
-    })
+    if (getBodyWidth <= 490) {
+        customizeElement.style.flexDirection = 'column';
+        customizeElement.style.marginBottom = '10px';
+        Array.from(customizeElement.children).forEach((item) => item.style.margin = '0 auto');
+    }
 
     if (getBodyWidth <= 650) { // mobile
-        
+
         headerElement.style.flexDirection = 'column';
         headerSearch.style.width = `${getBodyWidth}px`;
         inputSearch.style.width = `${getBodyWidth / 2}px`;
@@ -60,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
         navUl.style.minHeight = 'auto';
         navUl.style.width = `${getBodyWidth}px`;
         navUl.style.alignItems = 'center';
-        
+
         mainElement.style.flexDirection = 'column';
 
         filmElement.style.background = "url('./image/mars_mob.webp') center / cover no-repeat";
@@ -101,12 +156,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // инициализация ширины при загрузке страницы
         updateWidth();
-        
+
         headerSearch.style.width = `${getBodyWidth / 4}px`;
 
         formSearch.style.height = '100px';
         formSearch.style.width = `${getBodyWidth / 4}px`;
-        
+
         inputSearch.style.width = `${getBodyWidth / 6}px`;
 
         mainElement.style.justifyContent = 'flex-start';
