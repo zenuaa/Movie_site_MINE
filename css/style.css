@@ -234,10 +234,10 @@ main .customize{
 .db li {
   padding-bottom: 5px;
   padding-right: 0;
-  display: inline-block;
+  display: inline;
   counter-increment: my-counter; /* увеличить счетчик */
 }
-li:before {
+.db li:before {
   content: counter(my-counter) '.'; /* отобразить значение счетчика */
   display: inline-block;
   width: 1em;
@@ -245,10 +245,12 @@ li:before {
   text-align: right;
 }
 .db li:hover {
-color:rgb(19, 38, 124);
+/* color:rgb(19, 38, 124); */
 text-decoration: underline;  
 cursor: pointer;
 }
+
+
 
 .db img{
     /* display: none; */
@@ -260,6 +262,9 @@ cursor: pointer;
 
 .hide{
     display: none;
+}
+.red{
+    color: red;
 }
 
 

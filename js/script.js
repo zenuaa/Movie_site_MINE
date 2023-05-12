@@ -48,11 +48,13 @@ const headerElement = getElem('header'),
     filmDescr = getElem('.film_descr'),
 
     dbOl = getElem('.db ol'),
-    dbLiList = getElemS('.db li'),
+    dbLiList = document.getElementsByClassName('dbList'),
+
+
     dbImgList = getElemS('.db img'),
     customizeElement = getElem('.customize'),
     imgTrash = getElem('ol img'),
-    imgTrashList = getElemS('ol img'),
+    imgTrashList = document.getElementsByClassName('trash'),
 
     articleElement = getElem('article'),
     adElements = getElemS('.ad'),
@@ -61,6 +63,46 @@ const headerElement = getElem('header'),
 adElements.forEach(item => {
     ad_arr.push(item.children[0])
 })
+
+
+function addFilmElem(filmName) {
+    const brElementCreate = document.createElement('br'),
+        dbLiElementCreate = document.createElement('li'),
+        imgTrashElementCreate = document.createElement('img');
+
+
+    dbLiElementCreate.classList.add('dbList');
+    dbLiElementCreate.textContent = filmName;
+
+
+    imgTrashElementCreate.classList.add('hide');
+    imgTrashElementCreate.classList.add('trash');
+    imgTrashElementCreate.setAttribute('src', 'image/trash.png');
+    imgTrashElementCreate.setAttribute('alt', 'image');
+
+    dbOl.prepend(brElementCreate);
+    dbOl.prepend(dbLiElementCreate)
+    dbLiList[0].after(imgTrashElementCreate);
+
+}
+
+addFilmElem('The Gentlemen (2020)'); // add new film
+addFilmElem('The Gentlemen (2020)'); // add new film
+addFilmElem('The Gentlemen (2020)'); // add new film
+addFilmElem('The Gentlemen (2020)'); // add new film
+
+function delFilm(e) {
+    e.target.previousElementSibling.remove();
+    e.target.nextElementSibling.remove();
+    e.target.remove();
+    lastClickedItemIndex = null;
+}
+
+for (const item of imgTrashList) {
+    item.addEventListener('click', delFilm)
+}
+
+
 let lastClickedItemIndex = null;
 
 const toggleTrashImage = (itemIndex) => {
@@ -69,33 +111,31 @@ const toggleTrashImage = (itemIndex) => {
 
 const hideLastClickedItemTrashImage = () => {
     if (lastClickedItemIndex !== null) {
+        dbLiList[lastClickedItemIndex].classList.toggle('red');
         toggleTrashImage(lastClickedItemIndex);
         lastClickedItemIndex = null;
     }
 };
 
 const handleListItemClick = (e) => {
-    const itemIndex = Array.from(dbLiList).indexOf(e.target);
-
+    let itemIndex = Array.from(dbLiList).indexOf(e.target);
+    e.target.classList.toggle('red');
     if (itemIndex !== lastClickedItemIndex) {
         hideLastClickedItemTrashImage();
         toggleTrashImage(itemIndex);
         lastClickedItemIndex = itemIndex;
+
     } else {
         toggleTrashImage(itemIndex);
         lastClickedItemIndex = null;
+
     }
 };
 
-Array.from(dbOl.children).forEach((item) => {
+
+for (let item of document.getElementsByClassName('dbList')) {
     item.addEventListener('click', handleListItemClick);
-});
-
-
-
-
-
-
+}
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -110,7 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         headerElement.style.flexDirection = 'column';
         headerSearch.style.width = `${getBodyWidth}px`;
-        inputSearch.style.width = `${getBodyWidth / 2}px`;
+        inputSearch.style.width = `${
+            getBodyWidth / 2
+        }px`;
 
         navUl.style.minHeight = 'auto';
         navUl.style.width = `${getBodyWidth}px`;
@@ -121,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
         filmElement.style.background = "url('./image/mars_mob.webp') center / cover no-repeat";
         filmElement.style.minWidth = '50px';
         filmElement.style.marginTop = '2px';
-        // filmElement.style.width = `${getBodyWidth}px`;
         wrapElement.style.width = `${getBodyWidth}px`;
 
         filmDescr.style.maxWidth = '640px';
@@ -131,21 +172,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    if (getBodyWidth > 650 && getBodyWidth < 974) { //tablet
-        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.3}px`;
-        // filmElement.style.minWidth = '444px';
+    if (getBodyWidth > 650 && getBodyWidth < 974) { // tablet
+        h1Element.style.marginLeft = `-${
+            getBodyWidth / 2 * 0.3
+        }px`;
         wrapElement.style.minWidth = '444px';
         const calcWrapWidth = () => {
-            const availableWidth = getBodyWidth - `${navMenu.clientWidth}` - 6;
+            const availableWidth = getBodyWidth - `${
+                navMenu.clientWidth
+            }` - 6;
             return `${availableWidth}px`;
         }
         const updateWidth = () => {
             let availableWidth = calcWrapWidth();
-            // filmElement.style.width = (parseFloat(availableWidth)) + 'px';
             wrapElement.style.width = (parseFloat(availableWidth)) + 'px';
-            setTimeout(() => {      //убираем баг лишних 15рх
+            setTimeout(() => { // убираем баг лишних 15рх
                 if (wrapElement.offsetTop !== navMenu.offsetTop) {
-                    // filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
                     wrapElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
 
                 }
@@ -157,12 +199,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // инициализация ширины при загрузке страницы
         updateWidth();
 
-        headerSearch.style.width = `${getBodyWidth / 4}px`;
+        headerSearch.style.width = `${
+            getBodyWidth / 4
+        }px`;
 
         formSearch.style.height = '100px';
-        formSearch.style.width = `${getBodyWidth / 4}px`;
+        formSearch.style.width = `${
+            getBodyWidth / 4
+        }px`;
 
-        inputSearch.style.width = `${getBodyWidth / 6}px`;
+        inputSearch.style.width = `${
+            getBodyWidth / 6
+        }px`;
 
         mainElement.style.justifyContent = 'flex-start';
 
@@ -175,28 +223,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    if (getBodyWidth >= 974) { //desktop
-        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.4}px`;
+    if (getBodyWidth >= 974) { // desktop
+        h1Element.style.marginLeft = `-${
+            getBodyWidth / 2 * 0.4
+        }px`;
 
         const calcWrapWidth = () => {
-            const availableWidth = getBodyWidth - `${navMenu.clientWidth + articleElement.clientWidth}` - 6;
+            const availableWidth = getBodyWidth - `${
+                navMenu.clientWidth + articleElement.clientWidth
+            }` - 6;
             return `${availableWidth}px`;
 
         }
 
         const updateWidth = () => {
             let availableWidth = calcWrapWidth();
-            // filmElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
             wrapElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
-            setTimeout(() => {      //убираем баг лишних 15рх
+            setTimeout(() => { // убираем баг лишних 15рх
                 if (wrapElement.offsetTop !== articleElement.offsetTop) {
                     availableWidth = (parseFloat(availableWidth) - 15) + 'px';
-                    // filmElement.style.width = availableWidth;
                     wrapElement.style.width = availableWidth;
 
                 }
             }, 100);
-            // filmElement.style.width = availableWidth;
             wrapElement.style.width = availableWidth;
 
 
@@ -220,4 +269,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
-
