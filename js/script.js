@@ -49,10 +49,11 @@ const headerElement = getElem('header'),
 
     dbOl = getElem('.db ol'),
     dbLiList = document.getElementsByClassName('dbList'),
-
+    dbFieldsetElem = getElem('.db fieldset'),
 
     dbImgList = getElemS('.db img'),
     customizeElement = getElem('.customize'),
+    customizeDBFieldsetElem = getElem('.customizeDB fieldset'),
     imgTrash = getElem('ol img'),
     imgTrashList = document.getElementsByClassName('trash'),
 
@@ -140,14 +141,17 @@ for (let item of document.getElementsByClassName('dbList')) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    if (getBodyWidth <= 490) {
+    if (getBodyWidth <= 730) {
+        dbFieldsetElem.style.width = `${getBodyWidth*0.9 -200}px`;
+        customizeDBFieldsetElem.style.width = `${getBodyWidth*0.9 -200}px`;
         customizeElement.style.flexDirection = 'column';
         customizeElement.style.marginBottom = '10px';
         Array.from(customizeElement.children).forEach((item) => item.style.margin = '0 auto');
     }
 
     if (getBodyWidth <= 650) { // mobile
-
+        dbFieldsetElem.style.width = `${getBodyWidth*0.9}px`;
+        customizeDBFieldsetElem.style.width = `${getBodyWidth*0.9}px`;
         headerElement.style.flexDirection = 'column';
         headerSearch.style.width = `${getBodyWidth}px`;
         inputSearch.style.width = `${
@@ -173,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (getBodyWidth > 650 && getBodyWidth < 974) { // tablet
+        // dbFieldsetElem.style.width = `${getBodyWidth*0.9-360}px`;
         h1Element.style.marginLeft = `-${
             getBodyWidth / 2 * 0.3
         }px`;
