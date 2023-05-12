@@ -1,28 +1,4 @@
-/* Задания на урок:
-
-1) Удалить все рекламные блоки со страницы (правая часть сайта)
-
-2) Изменить жанр фильма, поменять "комедия" на "драма"
-
-3) Изменить задний фон постера с фильмом на изображение "bg.jpg". Оно лежит в папке img.
-Реализовать только при помощи JS
-
-4) Список фильмов на странице сформировать на основании данных из этого JS файла.
-Отсортировать их по алфавиту 
-
-5) Добавить нумерацию выведенных фильмов */
-
 'use strict';
-
-const movieDB = {
-    movies: [
-        "Логан",
-        "Лига справедливости",
-        "Ла-ла лэнд",
-        "Одержимость",
-        "Скотт Пилигрим против..."
-    ]
-};
 
 const getBodyWidth = document.body.clientWidth;
 const getElem = (id) => {
@@ -34,30 +10,37 @@ const getElemS = (id) => {
     const elem = document.querySelectorAll(id);
     return elem;
 };
-const headerElement = getElem('header'),
+const headerElem = getElem('header'),
     headerSearch = getElem('.header_search'),
     formSearch = getElem('.form_search'),
     inputSearch = getElem('#input_search'),
     h1Element = getElem('h1'),
 
-    mainElement = getElem('main'),
+    mainElem = getElem('main'),
     navMenu = getElem('.nav_menu'),
     navUl = getElem('nav ul'),
-    wrapElement = getElem('.wrap'),
-    filmElement = getElem('.film'),
+    wrapElem = getElem('.wrap'),
+    filmElem = getElem('.film'),
     filmDescr = getElem('.film_descr'),
+
+    inputNameFilmElem = getElem('#movie_name'),
+    inputYearFilmElem = getElem('#movie_year'),
+    submitButElem = getElem('#add_to_DB'),
+    radioElements = [
+        getElem('#yes'), getElem('#no')
+    ],
+    checkFormElem = getElem('#check_form'),
+
 
     dbOl = getElem('.db ol'),
     dbLiList = document.getElementsByClassName('dbList'),
     dbFieldsetElem = getElem('.db fieldset'),
 
-    dbImgList = getElemS('.db img'),
-    customizeElement = getElem('.customize'),
+    customizeElem = getElem('.customize'),
     customizeDBFieldsetElem = getElem('.customizeDB fieldset'),
-    imgTrash = getElem('ol img'),
     imgTrashList = document.getElementsByClassName('trash'),
 
-    articleElement = getElem('article'),
+    articleElem = getElem('article'),
     adElements = getElemS('.ad'),
     ad_arr = [];
 
@@ -65,44 +48,135 @@ adElements.forEach(item => {
     ad_arr.push(item.children[0])
 })
 
+const movieDB = {
+    movies: {
+        2018: ["Cold War"],
 
-function addFilmElem(filmName) {
-    const brElementCreate = document.createElement('br'),
-        dbLiElementCreate = document.createElement('li'),
-        imgTrashElementCreate = document.createElement('img');
+        2019: [
+            "Portrait of a Lady on Fire", "Pain and Glory"
+        ],
+
+        2020: ["Another Round", "The Father"]
+    },
+    addNewFilm: function (e) {
+
+        if (inputNameFilmElem.value.trim() === "") {
+            e.preventDefault();
+            console.warn("Incorrect input: Incorrect film name input..");
+            throw new Error("Incorrect input: Incorrect film name input..");
+        } else {
+            if (inputYearFilmElem.value.trim() === "" || !isYear(inputYearFilmElem.value) || inputYearFilmElem.value < 1800) {
+                e.preventDefault();
+                console.warn("Incorrect input: Incorrect film year input..");
+                throw new Error("Incorrect input: Incorrect film year input..");
+            } else {
+
+                e.preventDefault();
+                if (lastClickedItemIndex !== null) {
+                    dbLiList[lastClickedItemIndex].classList.toggle('red');
+                    toggleTrashImage(lastClickedItemIndex);
+                    lastClickedItemIndex = null;
+                }
+
+                const brElementCreate = document.createElement('br'),
+                    dbLiElementCreate = document.createElement('li'),
+                    imgTrashElementCreate = document.createElement('img');
+
+                dbLiElementCreate.classList.add('dbList');
+                dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)
+                    } (${inputYearFilmElem.value
+                    })`;
+
+                imgTrashElementCreate.classList.add('hide');
+                imgTrashElementCreate.classList.add('trash');
+                imgTrashElementCreate.setAttribute('src', 'image/trash.png');
+                imgTrashElementCreate.setAttribute('alt', 'image');
+
+                dbOl.prepend(brElementCreate);
+                dbOl.prepend(dbLiElementCreate)
+                dbLiList[0].after(imgTrashElementCreate);
+
+                dbLiElementCreate.addEventListener('click', handleListItemClick);
+                imgTrashElementCreate.addEventListener('click', movieDB.delFilm)
+
+                if (Object.keys(movieDB.movies).includes(inputYearFilmElem.value)) {
+                    movieDB.movies[inputYearFilmElem.value].push(FirstCharAttoUpper(inputNameFilmElem.value))
+                } else {
+                    movieDB.movies[inputYearFilmElem.value] = [FirstCharAttoUpper(inputNameFilmElem.value)];
+                }
+                inputYearFilmElem.value = "";
+                inputNameFilmElem.value = "";
+                radioElements.forEach(item => {
+                    item.checked = false;
+                })
+                return this;
+            }
+        }
+    },
+    delFilm: function (e) {
+
+        movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)] = movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)].filter(item => { return item.toLowerCase() != movieDB.getMovieName(lastClickedItemIndex).toLowerCase() })
+
+        e.target.previousElementSibling.remove();
+        e.target.nextElementSibling.remove();
+        e.target.remove();
 
 
-    dbLiElementCreate.classList.add('dbList');
-    dbLiElementCreate.textContent = filmName;
+        lastClickedItemIndex = null;
 
+    },
+    getMovieName: function (index) {
+        return dbLiList[index].textContent.slice(0, dbLiList[index].textContent.length - 7);
+    },
+    getMovieYear: function (index) {
+        return dbLiList[index].textContent.slice(dbLiList[index].textContent.length - 5, dbLiList[index].textContent.length - 1);
 
-    imgTrashElementCreate.classList.add('hide');
-    imgTrashElementCreate.classList.add('trash');
-    imgTrashElementCreate.setAttribute('src', 'image/trash.png');
-    imgTrashElementCreate.setAttribute('alt', 'image');
+    }
+};
 
-    dbOl.prepend(brElementCreate);
-    dbOl.prepend(dbLiElementCreate)
-    dbLiList[0].after(imgTrashElementCreate);
+submitButElem.addEventListener('click', movieDB.addNewFilm);
 
-}
-
-addFilmElem('The Gentlemen (2020)'); // add new film
-addFilmElem('The Gentlemen (2020)'); // add new film
-addFilmElem('The Gentlemen (2020)'); // add new film
-addFilmElem('The Gentlemen (2020)'); // add new film
-
-function delFilm(e) {
-    e.target.previousElementSibling.remove();
-    e.target.nextElementSibling.remove();
-    e.target.remove();
-    lastClickedItemIndex = null;
-}
 
 for (const item of imgTrashList) {
-    item.addEventListener('click', delFilm)
+    item.addEventListener('click', movieDB.delFilm)
 }
 
+function FirstCharAttoUpper(myString) { // chage first charAt to UpperCase
+    let firstLetter = myString.charAt(0).toUpperCase();
+    let result = firstLetter + myString.slice(1);
+    return result;
+}
+function isYear(input) { // проверяем, соответствует ли введенное значение регулярному выражению для года в формате YYYY
+    let yearRegex = /^\d{4}$/;
+    if (yearRegex.test(input)) {
+        return input;
+    } else {
+        return false;
+    }
+}
+
+// function enableinputYearFilmElem(){
+//     if (inputNameFilmElem.value === "") {
+//         inputYearFilmElem.disabled = true;
+//     } else {
+//         inputYearFilmElem.disabled = false;
+//     }
+// }
+// enableinputYearFilmElem();
+
+
+// function enabledSubmit() {// активация и дезактивация confirm
+//     if (inputYearFilmElem.value === "" || inputNameFilmElem.value === "") {
+//         submitButElem.disabled = true;
+//     } else {
+//         submitButElem.disabled = false;
+//     }
+// }
+// enabledSubmit();
+
+// radioElements.forEach((e) => {
+//     e.addEventListener('click', enabledSubmit)
+// })
 
 let lastClickedItemIndex = null;
 
@@ -142,58 +216,60 @@ for (let item of document.getElementsByClassName('dbList')) {
 document.addEventListener('DOMContentLoaded', function () {
 
     if (getBodyWidth <= 730) {
-        dbFieldsetElem.style.width = `${getBodyWidth*0.9 -200}px`;
-        customizeDBFieldsetElem.style.width = `${getBodyWidth*0.9 -200}px`;
-        customizeElement.style.flexDirection = 'column';
-        customizeElement.style.marginBottom = '10px';
-        Array.from(customizeElement.children).forEach((item) => item.style.margin = '0 auto');
+        dbFieldsetElem.style.width = `${getBodyWidth * 0.9 - 200
+            }px`;
+        customizeDBFieldsetElem.style.width = `${getBodyWidth * 0.9 - 200
+            }px`;
+        customizeElem.style.flexDirection = 'column';
+        customizeElem.style.marginBottom = '10px';
+        Array.from(customizeElem.children).forEach((item) => item.style.margin = '0 auto');
     }
 
     if (getBodyWidth <= 650) { // mobile
-        dbFieldsetElem.style.width = `${getBodyWidth*0.9}px`;
-        customizeDBFieldsetElem.style.width = `${getBodyWidth*0.9}px`;
-        headerElement.style.flexDirection = 'column';
+        dbFieldsetElem.style.width = `${getBodyWidth * 0.9
+            }px`;
+        customizeDBFieldsetElem.style.width = `${getBodyWidth * 0.9
+            }px`;
+        headerElem.style.flexDirection = 'column';
         headerSearch.style.width = `${getBodyWidth}px`;
-        inputSearch.style.width = `${
-            getBodyWidth / 2
-        }px`;
+        inputSearch.style.width = `${getBodyWidth / 2
+            }px`;
 
         navUl.style.minHeight = 'auto';
         navUl.style.width = `${getBodyWidth}px`;
         navUl.style.alignItems = 'center';
 
-        mainElement.style.flexDirection = 'column';
+        mainElem.style.flexDirection = 'column';
 
-        filmElement.style.background = "url('./image/mars_mob.webp') center / cover no-repeat";
-        filmElement.style.minWidth = '50px';
-        filmElement.style.marginTop = '2px';
-        wrapElement.style.width = `${getBodyWidth}px`;
+        filmElem.style.background = "url('./image/mars_mob.webp') center / cover no-repeat";
+        filmElem.style.minWidth = '50px';
+        filmElem.style.marginTop = '2px';
+        wrapElem.style.width = `${getBodyWidth}px`;
 
         filmDescr.style.maxWidth = '640px';
 
-        articleElement.style.flexDirection = 'row';
-        articleElement.style.justifyContent = 'space-around'
+        articleElem.style.flexDirection = 'row';
+        articleElem.style.justifyContent = 'space-around'
 
     }
 
-    if (getBodyWidth > 650 && getBodyWidth < 974) { // tablet
+    if (getBodyWidth > 650 && getBodyWidth < 974) {
+        // tablet
         // dbFieldsetElem.style.width = `${getBodyWidth*0.9-360}px`;
-        h1Element.style.marginLeft = `-${
-            getBodyWidth / 2 * 0.3
-        }px`;
-        wrapElement.style.minWidth = '444px';
+        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.3
+            }px`;
+        wrapElem.style.minWidth = '444px';
         const calcWrapWidth = () => {
-            const availableWidth = getBodyWidth - `${
-                navMenu.clientWidth
-            }` - 6;
+            const availableWidth = getBodyWidth - `${navMenu.clientWidth
+                }` - 6;
             return `${availableWidth}px`;
         }
         const updateWidth = () => {
             let availableWidth = calcWrapWidth();
-            wrapElement.style.width = (parseFloat(availableWidth)) + 'px';
+            wrapElem.style.width = (parseFloat(availableWidth)) + 'px';
             setTimeout(() => { // убираем баг лишних 15рх
-                if (wrapElement.offsetTop !== navMenu.offsetTop) {
-                    wrapElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+                if (wrapElem.offsetTop !== navMenu.offsetTop) {
+                    wrapElem.style.width = (parseFloat(availableWidth) - 15) + 'px';
 
                 }
             }, 100);
@@ -204,54 +280,49 @@ document.addEventListener('DOMContentLoaded', function () {
         // инициализация ширины при загрузке страницы
         updateWidth();
 
-        headerSearch.style.width = `${
-            getBodyWidth / 4
-        }px`;
+        headerSearch.style.width = `${getBodyWidth / 4
+            }px`;
 
         formSearch.style.height = '100px';
-        formSearch.style.width = `${
-            getBodyWidth / 4
-        }px`;
+        formSearch.style.width = `${getBodyWidth / 4
+            }px`;
 
-        inputSearch.style.width = `${
-            getBodyWidth / 6
-        }px`;
+        inputSearch.style.width = `${getBodyWidth / 6
+            }px`;
 
-        mainElement.style.justifyContent = 'flex-start';
+        mainElem.style.justifyContent = 'flex-start';
 
-        wrapElement.style.marginLeft = '3px';
+        wrapElem.style.marginLeft = '3px';
 
-        articleElement.style.flexDirection = 'row';
-        articleElement.style.width = `${getBodyWidth}px`;
-        articleElement.style.marginTop = '3px';
-        articleElement.style.justifyContent = 'space-around';
+        articleElem.style.flexDirection = 'row';
+        articleElem.style.width = `${getBodyWidth}px`;
+        articleElem.style.marginTop = '3px';
+        articleElem.style.justifyContent = 'space-around';
 
     }
 
     if (getBodyWidth >= 974) { // desktop
-        h1Element.style.marginLeft = `-${
-            getBodyWidth / 2 * 0.4
-        }px`;
+        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.4
+            }px`;
 
         const calcWrapWidth = () => {
-            const availableWidth = getBodyWidth - `${
-                navMenu.clientWidth + articleElement.clientWidth
-            }` - 6;
+            const availableWidth = getBodyWidth - `${navMenu.clientWidth + articleElem.clientWidth
+                }` - 6;
             return `${availableWidth}px`;
 
         }
 
         const updateWidth = () => {
             let availableWidth = calcWrapWidth();
-            wrapElement.style.width = (parseFloat(availableWidth) - 15) + 'px';
+            wrapElem.style.width = (parseFloat(availableWidth) - 15) + 'px';
             setTimeout(() => { // убираем баг лишних 15рх
-                if (wrapElement.offsetTop !== articleElement.offsetTop) {
+                if (wrapElem.offsetTop !== articleElem.offsetTop) {
                     availableWidth = (parseFloat(availableWidth) - 15) + 'px';
-                    wrapElement.style.width = availableWidth;
+                    wrapElem.style.width = availableWidth;
 
                 }
             }, 100);
-            wrapElement.style.width = availableWidth;
+            wrapElem.style.width = availableWidth;
 
 
         };
@@ -265,8 +336,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // // удаление рекламы что не влазит в стоку !!!!!!!!!! не пашет нормально доделать
     setTimeout(() => {
         if (getBodyWidth < 810 && getBodyWidth > 600) {
-            articleElement.style.width = '599px';
-            articleElement.style.margin = '3px auto';
+            articleElem.style.width = '599px';
+            articleElem.style.margin = '3px auto';
 
 
         }
