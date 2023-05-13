@@ -10,8 +10,11 @@ a:active {
     color: black;
 }
 
+.error{
+    color:red;
+}
 body {
-    background-color:  rgba(221, 221, 221, 0.308);
+    background-color: rgba(221, 221, 221, 0.308);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -130,7 +133,7 @@ a:hover {
     color: rgb(255, 217, 0);
 }
 
-main .wrap{
+main .wrap {
     display: flex;
     flex-direction: column;
 }
@@ -140,41 +143,50 @@ div .film {
     min-height: 500px;
     background: url("../image/mars.webp") center/cover no-repeat;
     padding: 20px;
+    position: relative;
 
 }
 
-.film_genre{
+.film_genre {
     display: inline-block;
     color: #FFFFFF;
-            font-weight: bold;
-            font-size: 22px;
-            line-height: 28px;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 28px;
 }
-.film_title{
+
+.film_title {
     font-weight: bold;
     font-size: 40px;
     line-height: 56px;
     color: #FFFFFF;
     text-transform: uppercase;
 }
-.film_descr{
+
+.film_descr {
     font-weight: bold;
     font-size: 18px;
     line-height: 21px;
     color: #FFFFFF;
     text-transform: uppercase;
 }
-.descrText{
+
+.descrText {
     max-width: 100%;
     font-weight: 400;
     padding: 0 20px;
     /* font-family: Arial, Helvetica, sans-serif; */
     text-transform: none;
 }
-.film_ratings{
+
+.film_ratings {
+
     margin-top: 13px;
+    position: absolute;
+    bottom: 20px;
 }
-.film_ratings span{    
+
+.film_ratings span {
     font-weight: bold;
     font-size: 18px;
     line-height: 21px;
@@ -182,7 +194,7 @@ div .film {
     margin-right: 25px;
 }
 
-main .customize{
+main .customize {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -191,32 +203,55 @@ main .customize{
 
 }
 
-.customize h4{
-   margin: 0 auto ;
+.customize h4 {
+    margin: 0 auto;
 }
-.customize fieldset{
+
+.customize fieldset {
     margin-top: 15px;
 }
 
-#movie_name{
+#movie_name {
     margin-top: 5px;
     margin-bottom: 12px;
 }
 
-#yes{
+#yes {
     margin-left: 0;
 }
 
-#no{
+#no {
     margin-left: 15px;
-    margin-top: 5px;    
+    margin-top: 5px;
 }
 
-.customize [type="submit"]{
-    margin-top: 10px ;  
+.console h4{ 
+    margin: 0 20px 0 20px;
+}
+.output_field {
+    overflow-y: scroll;
+    overflow-x:scroll;
+    height: 200px;
+    border:solid 1px black;
+    margin: 20px;
+    margin-top: 5px;
+    padding: 10px; 
+    /* background-color:#5f5c5c; */
+
 }
 
-.customize .db{
+.output {
+    overflow-wrap: break-word;
+
+    /* color: #fff; */
+}
+
+
+.customize [type="submit"] {
+    margin-top: 10px;
+}
+
+.customize .db {
     flex-grow: 1;
     margin-bottom: 3px;
 
@@ -227,31 +262,38 @@ main .customize{
     margin-bottom: 0;
     padding-left: 5px;
     list-style-type: decimal;
-    counter-reset: my-counter;/* сбросить счетчик */
-     
+    /* counter-reset: my-counter; */
+    /* сбросить счетчик */
+
 }
+
 .db li {
-  padding-bottom: 5px;
-  padding-right: 0;
-  display: inline;
-  counter-increment: my-counter; /* увеличить счетчик */
+    overflow-wrap: break-word;
+    padding-bottom: 5px;
+    padding-right: 0;
+    display: inline;
+    /* counter-increment: my-counter; */
+    /* увеличить счетчик */
 }
+
 .db li:before {
-  content: counter(my-counter) '.'; /* отобразить значение счетчика */
-  display: inline-block;
-  width: 1em;
-  margin-right: 0.5em;
-  text-align: right;
+    /* content: counter(my-counter) '.'; */
+    /* отобразить значение счетчика */
+    display: inline-block;
+    width: 1em;
+    margin-right: 0.5em;
+    text-align: right;
 }
+
 .db li:hover {
-/* color:rgb(19, 38, 124); */
-text-decoration: underline;  
-cursor: pointer;
+    /* color:rgb(19, 38, 124); */
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 
 
-.db img{
+.db img {
     /* display: none; */
     margin-top: -4px;
     margin-left: 10px;
@@ -259,10 +301,11 @@ cursor: pointer;
 
 }
 
-.hide{
+.hide {
     display: none;
 }
-.red{
+
+.red {
     color: red;
 }
 
@@ -289,12 +332,13 @@ footer {
 
 
 }
-footer a:link{
-    color:#fff;
+
+footer a:link {
+    color: #fff;
     text-decoration: none;
 }
 
-footer a:hover{
+footer a:hover {
     color: rgb(255, 217, 0);
 }
 

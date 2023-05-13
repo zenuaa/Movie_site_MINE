@@ -23,6 +23,11 @@ const headerElem = getElem('header'),
     filmElem = getElem('.film'),
     filmDescr = getElem('.film_descr'),
 
+
+    outputFieldElem = getElem(".output_field"),
+    output = document.querySelector('.output'),
+
+    
     inputNameFilmElem = getElem('#movie_name'),
     inputYearFilmElem = getElem('#movie_year'),
     submitButElem = getElem('#add_to_DB'),
@@ -48,6 +53,21 @@ adElements.forEach(item => {
     ad_arr.push(item.children[0])
 })
 
+   const log = function(message) {
+  output.insertAdjacentHTML('beforeend', `<span> ${message} </span><br>`)
+}
+
+const outputFieldScroll = function(){
+    let getHeight = 0;
+    getHeight += outputFieldElem.offsetHeight;
+    // console.log(getHeight);
+    
+    outputFieldElem.style.height = `${getHeight}px`;
+    outputFieldElem.scrollTop = outputFieldElem.scrollHeight;
+        return getHeight;
+}
+
+
 const movieDB = {
     movies: {
         2018: ["Cold War"],
@@ -60,18 +80,27 @@ const movieDB = {
     },
     addNewFilm: function (e) {
 
+        
+
         if (inputNameFilmElem.value.trim() === "") {
             e.preventDefault();
-            console.warn("Incorrect input: Incorrect film name input..");
-            throw new Error("Incorrect input: Incorrect film name input..");
+            log("<span class='error'>Error:</span> Film name input - is empty..");
+            outputFieldScroll();
+
+            // console.warn("Incorrect input: Incorrect film name input..");
+            // throw new Error("Incorrect input: Incorrect film name input..");
         } else {
             if (inputYearFilmElem.value.trim() === "" || !isYear(inputYearFilmElem.value) || inputYearFilmElem.value < 1800) {
                 e.preventDefault();
-                console.warn("Incorrect input: Incorrect film year input..");
-                throw new Error("Incorrect input: Incorrect film year input..");
+                log("<span class='error'>Error:</span> Film year input - is empty or input.value incorrect..");
+                outputFieldScroll();
+
+                // console.warn("Incorrect input: Incorrect film year input..");
+            //     throw new Error("Incorrect input: Incorrect film year input..");
             } else {
 
                 e.preventDefault();
+
                 if (lastClickedItemIndex !== null) {
                     dbLiList[lastClickedItemIndex].classList.toggle('red');
                     toggleTrashImage(lastClickedItemIndex);
@@ -80,21 +109,30 @@ const movieDB = {
 
                 const brElementCreate = document.createElement('br'),
                     dbLiElementCreate = document.createElement('li'),
-                    imgTrashElementCreate = document.createElement('img');
+                    imgTrashElementCreate = document.createElement('img'),
+                    hrElementCreate = document.createElement('hr');
 
                 dbLiElementCreate.classList.add('dbList');
                 dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)
                     } (${inputYearFilmElem.value
                     })`;
+                log(`Add to DB: <strong>${FirstCharAttoUpper(inputNameFilmElem.value)
+                }</strong>  <br>release year: <strong>${inputYearFilmElem.value
+                }</strong>`); 
+                outputFieldScroll();
+
 
                 imgTrashElementCreate.classList.add('hide');
                 imgTrashElementCreate.classList.add('trash');
                 imgTrashElementCreate.setAttribute('src', 'image/trash.png');
                 imgTrashElementCreate.setAttribute('alt', 'image');
-
+                                
+                dbOl.prepend(hrElementCreate);
                 dbOl.prepend(brElementCreate);
                 dbOl.prepend(dbLiElementCreate)
                 dbLiList[0].after(imgTrashElementCreate);
+
+
 
                 dbLiElementCreate.addEventListener('click', handleListItemClick);
                 imgTrashElementCreate.addEventListener('click', movieDB.delFilm)
@@ -109,14 +147,21 @@ const movieDB = {
                 radioElements.forEach(item => {
                     item.checked = false;
                 })
-                return this;
+                
             }
         }
+        outputFieldScroll();
+                return this;
     },
     delFilm: function (e) {
 
         movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)] = movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)].filter(item => { return item.toLowerCase() != movieDB.getMovieName(lastClickedItemIndex).toLowerCase() })
+        log(`<span class='error'> Removed from DB:</span> <strong>${movieDB.getMovieName(lastClickedItemIndex)}</strong> `);
+        outputFieldScroll();
 
+        e.target.parentNode.lastElementChild.remove();
+        console.log(e.target.parentNode.lastElementChild);
+        
         e.target.previousElementSibling.remove();
         e.target.nextElementSibling.remove();
         e.target.remove();
