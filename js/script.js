@@ -122,11 +122,11 @@ const movieDB = {
                     
                 }
 
-                if (lastClickedItemIndex !== null) {
-                    dbLiList[lastClickedItemIndex].classList.toggle('red');
-                    // toggleTrashImage(lastClickedItemIndex);
-                    imgTrashList[lastClickedItemIndex].classList.toggle('hide');
-                    lastClickedItemIndex = null;
+                if (lastClickedIndex !== null) {
+                    dbLiList[lastClickedIndex].classList.toggle('red');
+                    // toggleTrashImage(lastClickedIndex);
+                    imgTrashList[lastClickedIndex].classList.toggle('hide');
+                    lastClickedIndex = null;
                 }
 
                 const brElementCreate = document.createElement('br'),
@@ -140,7 +140,7 @@ const movieDB = {
                 imgTrashElementCreate.setAttribute('src', 'image/trash.png');
                 imgTrashElementCreate.setAttribute('alt', 'image');
 
-                dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)}(${inputYearFilmElem.value})`;
+                dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)} (${inputYearFilmElem.value})`;
                 log(`Add to DB: <strong>${
                     FirstCharAttoUpper(inputNameFilmElem.value)
                 }</strong>  <br>release year: <strong>${
@@ -154,7 +154,7 @@ const movieDB = {
                 dbLiList[0].append(imgTrashElementCreate);
 
 
-                dbLiElementCreate.addEventListener('click', iventMovieDB());
+                dbLiElementCreate.addEventListener('click', clickToLi);
                 imgTrashElementCreate.addEventListener('click', movieDB.delFilm)
                 
                 
@@ -178,23 +178,12 @@ const movieDB = {
         return this;
     },
     delFilm: function (e) {
-
-        movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)] = delete movieDB.movies[movieDB[movieDB.getMovieYear(lastClickedItemIndex)]]
-      
-        log(`<span class='error'> Removed from DB:</span> <strong>${
-            movieDB.getMovieName(lastClickedItemIndex)
-        }</strong> `);
+         delete movieDB.movies[movieDB.getMovieYear(lastClickedIndex)][movieDB.getMovieName(lastClickedIndex)];
+        log(`<span class='error'> Removed from DB:</span> <strong>${movieDB.getMovieName(lastClickedIndex)}</strong> `);
         outputFieldScroll();
-
-    e.target.parentNode.nextElementSibling.remove(); //del br
-        // console.dir(e.target.parentNode);
-        
+        e.target.parentNode.nextElementSibling.remove(); //del br
         e.target.parentNode.remove();// del li
-
-        lastClickedItemIndex = null;
-
-        
-
+        lastClickedIndex = null;
     },
     getMovieName: function (index) {
         return dbLiList[index].textContent.slice(0, dbLiList[index].textContent.length - 7);
@@ -226,63 +215,40 @@ function isYear(input) { // проверяем, соответствует ли 
     }
 }
 
-let lastClickedItemIndex = null;
+let lastClickedIndex = null;
 
+function clickToLi(e){
+    let curentIndex = Array.from(dbLiList).indexOf(e.target);
+    if(lastClickedIndex === null){// проход по меню кликом
+        lastClickedIndex = curentIndex;
+        if(imgTrashList[curentIndex]){// проход по меню кликом
 
-
-
-function iventMovieDB(){
-const toggleTrashImage = (itemIndex) => {
-    imgTrashList[itemIndex].classList.toggle('hide');
-};
-
-const hideLastClickedItemTrashImage = () => {
-    if (lastClickedItemIndex !== null) {
-        dbLiList[lastClickedItemIndex].classList.toggle('red');
-        toggleTrashImage(lastClickedItemIndex);
-        lastClickedItemIndex = null;
+        imgTrashList[curentIndex].classList.toggle('hide');// показывает по клику
+        dbLiList[curentIndex].classList.add('red');
+        }
+        else{// если элемент был удален
+            lastClickedIndex = null;
+        }
     }
-};
-
-function handleListItemClick(e){
-    let itemIndex
-    if(e.target.localName === 'li'){
-        itemIndex = Array.from(dbLiList).indexOf(e.target);
-        e.target.classList.toggle('red');
-        console.log(e.target.localName);
-        console.dir(e.target);
-        console.dir(dbLiList);
-        console.dir(Array.from(dbLiList));
-        console.dir(itemIndex);
-    }
-    if(e.target.localName === 'img'){
-        itemIndex = Array.from(dbLiList).indexOf(e.target.parentNode);
-        console.log(e.target.localName);
-        console.dir(e.target);
-        console.dir(imgTrashList);
-        console.dir(Array.from(imgTrashList));
-        console.dir(itemIndex);
+    else{// проход по меню кликом
+        if(lastClickedIndex != curentIndex){
+        dbLiList[lastClickedIndex].classList.remove('red');// последний черный
+        dbLiList[curentIndex].classList.add('red');// текущий красим
+        imgTrashList[lastClickedIndex].classList.toggle('hide');// последний скрываем
+        imgTrashList[curentIndex].classList.toggle('hide');// текущий показываем
+        lastClickedIndex = curentIndex;
+        }
+       
 
 
-    }
-    console.log(lastClickedItemIndex);
-    if (itemIndex !== lastClickedItemIndex) {
-        hideLastClickedItemTrashImage();
-        toggleTrashImage(itemIndex);
-        lastClickedItemIndex = itemIndex;
-
-    } else {
-        toggleTrashImage(itemIndex);
-        lastClickedItemIndex = null;
 
     }
 }
-for (let item of dbLiList) {
-    item.addEventListener('click', handleListItemClick);
-}
+
+for (const itemLi of dbLiList) {
+    itemLi.addEventListener('click', clickToLi)
 }
 
-iventMovieDB();
 
 
 
