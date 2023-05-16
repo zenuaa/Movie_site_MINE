@@ -256,34 +256,42 @@ main .customize {
     margin-bottom: 3px;
 
 }
+.num{
+    /* counter-increment: my-counter; */
 
+}
 .db ol {
+    
+
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 5px;
     list-style-type: decimal;
-    /* counter-reset: my-counter; */
+    counter-reset: my-counter;
     /* сбросить счетчик */
 
 }
 
 .db li {
+    position: relative;
+    margin-left: 20px;
+
     overflow-wrap: break-word;
     padding-bottom: 5px;
     padding-right: 0;
     display: inline;
-    /* counter-increment: my-counter; */
+    counter-increment: my-counter;
     /* увеличить счетчик */
 }
 
-.db li:before {
-    /* content: counter(my-counter) '.'; */
-    /* отобразить значение счетчика */
-    display: inline-block;
-    width: 1em;
-    margin-right: 0.5em;
-    text-align: right;
-}
+    .db li:before {
+        content: counter(my-counter) '.';
+        /* отобразить значение счетчика */
+        display: inline-block;
+        width: 1em;
+        margin-right: 0.5em;
+        text-align: right;
+    }
 
 .db li:hover {
     /* color:rgb(19, 38, 124); */
@@ -291,18 +299,29 @@ main .customize {
     cursor: pointer;
 }
 
+.dblist{
+position: relative;
+}
 
-
-.db img {
+.dbList img {
     /* display: none; */
     margin-top: -4px;
     margin-left: 10px;
     vertical-align: middle;
-
+    position: absolute;
+    top: 4px;
+    left: -35px;
+    z-index: 1;
 }
 
 .hide {
     display: none;
+}
+.trash{
+    position: absolute;
+    top: 4px;
+    left: -35px;
+    z-index: 1;
 }
 
 .red {

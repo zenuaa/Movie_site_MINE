@@ -27,18 +27,19 @@ const headerElem = getElem('header'),
     outputFieldElem = getElem(".output_field"),
     output = document.querySelector('.output'),
 
-    
+
     inputNameFilmElem = getElem('#movie_name'),
     inputYearFilmElem = getElem('#movie_year'),
     submitButElem = getElem('#add_to_DB'),
     radioElements = [
         getElem('#yes'), getElem('#no')
     ],
-    checkFormElem = getElem('#check_form'),
+    // checkFormElem = getElem('#check_form'),
 
 
     dbOl = getElem('.db ol'),
     dbLiList = document.getElementsByClassName('dbList'),
+    // dbSpanNumList = document.getElementsByClassName('num'),
     dbFieldsetElem = getElem('.db fieldset'),
 
     customizeElem = getElem('.customize'),
@@ -53,34 +54,41 @@ adElements.forEach(item => {
     ad_arr.push(item.children[0])
 })
 
-   const log = function(message) {
-  output.insertAdjacentHTML('beforeend', `<span> ${message} </span><br>`)
+const log = function (message) {
+    output.insertAdjacentHTML('beforeend', `<span> ${message} </span><br>`)
 }
 
-const outputFieldScroll = function(){
+const outputFieldScroll = function () {
     let getHeight = 0;
     getHeight += outputFieldElem.offsetHeight;
     // console.log(getHeight);
-    
+
     outputFieldElem.style.height = `${getHeight}px`;
     outputFieldElem.scrollTop = outputFieldElem.scrollHeight;
-        return getHeight;
+    return getHeight;
 }
+submitButElem.disabled = true;
+
 
 
 const movieDB = {
     movies: {
-        2018: ["Cold War"],
+        2018: {
+            "Cold War": true
+        },
 
-        2019: [
-            "Portrait of a Lady on Fire", "Pain and Glory"
-        ],
+        2019: {
+            "Portrait of a Lady on Fire": false,
+            "Pain and Glory": false
+        },
 
-        2020: ["Another Round", "The Father"]
+        2020: {
+            "Another Round": true,
+            "The Father": false
+        }
     },
     addNewFilm: function (e) {
 
-        
 
         if (inputNameFilmElem.value.trim() === "") {
             e.preventDefault();
@@ -96,78 +104,96 @@ const movieDB = {
                 outputFieldScroll();
 
                 // console.warn("Incorrect input: Incorrect film year input..");
-            //     throw new Error("Incorrect input: Incorrect film year input..");
+                //     throw new Error("Incorrect input: Incorrect film year input..");
             } else {
 
                 e.preventDefault();
+                const getFavoriteChecked = ()=>{
+                    for(let i=0; i < radioElements.length; i++){
+                        if(radioElements[i].checked === true){
+                            // console.log(radioElements[i].checked);
+                            return true;
+                        }
+                        // console.log(radioElements[i].checked);
+
+                        return false;
+                    }
+                    
+                    
+                }
 
                 if (lastClickedItemIndex !== null) {
                     dbLiList[lastClickedItemIndex].classList.toggle('red');
-                    toggleTrashImage(lastClickedItemIndex);
+                    // toggleTrashImage(lastClickedItemIndex);
+                    imgTrashList[lastClickedItemIndex].classList.toggle('hide');
                     lastClickedItemIndex = null;
                 }
 
                 const brElementCreate = document.createElement('br'),
                     dbLiElementCreate = document.createElement('li'),
-                    imgTrashElementCreate = document.createElement('img'),
-                    hrElementCreate = document.createElement('hr');
+                    imgTrashElementCreate = document.createElement('img');
+                // hrElementCreate = document.createElement('hr');
 
                 dbLiElementCreate.classList.add('dbList');
-                dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)
-                    } (${inputYearFilmElem.value
-                    })`;
-                log(`Add to DB: <strong>${FirstCharAttoUpper(inputNameFilmElem.value)
-                }</strong>  <br>release year: <strong>${inputYearFilmElem.value
-                }</strong>`); 
-                outputFieldScroll();
-
-
                 imgTrashElementCreate.classList.add('hide');
                 imgTrashElementCreate.classList.add('trash');
                 imgTrashElementCreate.setAttribute('src', 'image/trash.png');
                 imgTrashElementCreate.setAttribute('alt', 'image');
-                                
-                dbOl.prepend(hrElementCreate);
+
+                dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)}(${inputYearFilmElem.value})`;
+                log(`Add to DB: <strong>${
+                    FirstCharAttoUpper(inputNameFilmElem.value)
+                }</strong>  <br>release year: <strong>${
+                    inputYearFilmElem.value
+                }</strong> <br>favorite value: <strong>${getFavoriteChecked()}</strong>`);
+                outputFieldScroll();
+
                 dbOl.prepend(brElementCreate);
                 dbOl.prepend(dbLiElementCreate)
-                dbLiList[0].after(imgTrashElementCreate);
+
+                dbLiList[0].append(imgTrashElementCreate);
 
 
-
-                dbLiElementCreate.addEventListener('click', handleListItemClick);
+                dbLiElementCreate.addEventListener('click', iventMovieDB());
                 imgTrashElementCreate.addEventListener('click', movieDB.delFilm)
-
-                if (Object.keys(movieDB.movies).includes(inputYearFilmElem.value)) {
-                    movieDB.movies[inputYearFilmElem.value].push(FirstCharAttoUpper(inputNameFilmElem.value))
-                } else {
-                    movieDB.movies[inputYearFilmElem.value] = [FirstCharAttoUpper(inputNameFilmElem.value)];
-                }
-                inputYearFilmElem.value = "";
-                inputNameFilmElem.value = "";
-                radioElements.forEach(item => {
-                    item.checked = false;
-                })
                 
+                
+               
+                if (Object.keys(movieDB.movies).includes(inputYearFilmElem.value)) {
+                movieDB.movies[inputYearFilmElem.value][FirstCharAttoUpper(inputNameFilmElem.value)] = getFavoriteChecked();
+                    
+                } else {
+                    movieDB.movies[inputYearFilmElem.value] = {};
+                    movieDB.movies[inputYearFilmElem.value][FirstCharAttoUpper(inputNameFilmElem.value)] = getFavoriteChecked();
+                } inputYearFilmElem.value = "";
+                inputNameFilmElem.value = "";
+                
+
             }
-        }
-        outputFieldScroll();
-                return this;
+        } outputFieldScroll();
+        radioElements.forEach(item=>{
+            item.checked = false;
+        });
+        submitButElem.disabled = true;
+        return this;
     },
     delFilm: function (e) {
 
-        movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)] = movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)].filter(item => { return item.toLowerCase() != movieDB.getMovieName(lastClickedItemIndex).toLowerCase() })
-        log(`<span class='error'> Removed from DB:</span> <strong>${movieDB.getMovieName(lastClickedItemIndex)}</strong> `);
+        movieDB.movies[movieDB.getMovieYear(lastClickedItemIndex)] = delete movieDB.movies[movieDB[movieDB.getMovieYear(lastClickedItemIndex)]]
+      
+        log(`<span class='error'> Removed from DB:</span> <strong>${
+            movieDB.getMovieName(lastClickedItemIndex)
+        }</strong> `);
         outputFieldScroll();
 
-        e.target.parentNode.lastElementChild.remove();
-        console.log(e.target.parentNode.lastElementChild);
+    e.target.parentNode.nextElementSibling.remove(); //del br
+        // console.dir(e.target.parentNode);
         
-        e.target.previousElementSibling.remove();
-        e.target.nextElementSibling.remove();
-        e.target.remove();
-
+        e.target.parentNode.remove();// del li
 
         lastClickedItemIndex = null;
+
+        
 
     },
     getMovieName: function (index) {
@@ -177,16 +203,16 @@ const movieDB = {
         return dbLiList[index].textContent.slice(dbLiList[index].textContent.length - 5, dbLiList[index].textContent.length - 1);
 
     }
+
 };
 
-submitButElem.addEventListener('click', movieDB.addNewFilm);
+radioElements.forEach(item=>{
+    item.addEventListener('click', ()=>{
+        submitButElem.disabled = false;
+    });
+})
 
-
-for (const item of imgTrashList) {
-    item.addEventListener('click', movieDB.delFilm)
-}
-
-function FirstCharAttoUpper(myString) { // chage first charAt to UpperCase
+function FirstCharAttoUpper(myString) {
     let firstLetter = myString.charAt(0).toUpperCase();
     let result = firstLetter + myString.slice(1);
     return result;
@@ -200,31 +226,12 @@ function isYear(input) { // проверяем, соответствует ли 
     }
 }
 
-// function enableinputYearFilmElem(){
-//     if (inputNameFilmElem.value === "") {
-//         inputYearFilmElem.disabled = true;
-//     } else {
-//         inputYearFilmElem.disabled = false;
-//     }
-// }
-// enableinputYearFilmElem();
-
-
-// function enabledSubmit() {// активация и дезактивация confirm
-//     if (inputYearFilmElem.value === "" || inputNameFilmElem.value === "") {
-//         submitButElem.disabled = true;
-//     } else {
-//         submitButElem.disabled = false;
-//     }
-// }
-// enabledSubmit();
-
-// radioElements.forEach((e) => {
-//     e.addEventListener('click', enabledSubmit)
-// })
-
 let lastClickedItemIndex = null;
 
+
+
+
+function iventMovieDB(){
 const toggleTrashImage = (itemIndex) => {
     imgTrashList[itemIndex].classList.toggle('hide');
 };
@@ -237,9 +244,28 @@ const hideLastClickedItemTrashImage = () => {
     }
 };
 
-const handleListItemClick = (e) => {
-    let itemIndex = Array.from(dbLiList).indexOf(e.target);
-    e.target.classList.toggle('red');
+function handleListItemClick(e){
+    let itemIndex
+    if(e.target.localName === 'li'){
+        itemIndex = Array.from(dbLiList).indexOf(e.target);
+        e.target.classList.toggle('red');
+        console.log(e.target.localName);
+        console.dir(e.target);
+        console.dir(dbLiList);
+        console.dir(Array.from(dbLiList));
+        console.dir(itemIndex);
+    }
+    if(e.target.localName === 'img'){
+        itemIndex = Array.from(dbLiList).indexOf(e.target.parentNode);
+        console.log(e.target.localName);
+        console.dir(e.target);
+        console.dir(imgTrashList);
+        console.dir(Array.from(imgTrashList));
+        console.dir(itemIndex);
+
+
+    }
+    console.log(lastClickedItemIndex);
     if (itemIndex !== lastClickedItemIndex) {
         hideLastClickedItemTrashImage();
         toggleTrashImage(itemIndex);
@@ -250,35 +276,50 @@ const handleListItemClick = (e) => {
         lastClickedItemIndex = null;
 
     }
-};
-
-
-for (let item of document.getElementsByClassName('dbList')) {
+}
+for (let item of dbLiList) {
     item.addEventListener('click', handleListItemClick);
+}
+}
+
+iventMovieDB();
+
+
+
+
+submitButElem.addEventListener('click', movieDB.addNewFilm);
+
+for (const item of imgTrashList) {
+    item.addEventListener('click', movieDB.delFilm)
 }
 
 
 document.addEventListener('DOMContentLoaded', function () {
 
     if (getBodyWidth <= 730) {
-        dbFieldsetElem.style.width = `${getBodyWidth * 0.9 - 200
-            }px`;
-        customizeDBFieldsetElem.style.width = `${getBodyWidth * 0.9 - 200
-            }px`;
+        dbFieldsetElem.style.width = `${
+            getBodyWidth * 0.9 - 200
+        }px`;
+        customizeDBFieldsetElem.style.width = `${
+            getBodyWidth * 0.9 - 200
+        }px`;
         customizeElem.style.flexDirection = 'column';
         customizeElem.style.marginBottom = '10px';
         Array.from(customizeElem.children).forEach((item) => item.style.margin = '0 auto');
     }
 
     if (getBodyWidth <= 650) { // mobile
-        dbFieldsetElem.style.width = `${getBodyWidth * 0.9
-            }px`;
-        customizeDBFieldsetElem.style.width = `${getBodyWidth * 0.9
-            }px`;
+        dbFieldsetElem.style.width = `${
+            getBodyWidth * 0.9
+        }px`;
+        customizeDBFieldsetElem.style.width = `${
+            getBodyWidth * 0.9
+        }px`;
         headerElem.style.flexDirection = 'column';
         headerSearch.style.width = `${getBodyWidth}px`;
-        inputSearch.style.width = `${getBodyWidth / 2
-            }px`;
+        inputSearch.style.width = `${
+            getBodyWidth / 2
+        }px`;
 
         navUl.style.minHeight = 'auto';
         navUl.style.width = `${getBodyWidth}px`;
@@ -300,13 +341,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (getBodyWidth > 650 && getBodyWidth < 974) {
         // tablet
-        // dbFieldsetElem.style.width = `${getBodyWidth*0.9-360}px`;
-        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.3
-            }px`;
+        h1Element.style.marginLeft = `-${
+            getBodyWidth / 2 * 0.3
+        }px`;
         wrapElem.style.minWidth = '444px';
         const calcWrapWidth = () => {
-            const availableWidth = getBodyWidth - `${navMenu.clientWidth
-                }` - 6;
+            const availableWidth = getBodyWidth - `${
+                navMenu.clientWidth
+            }` - 6;
             return `${availableWidth}px`;
         }
         const updateWidth = () => {
@@ -325,15 +367,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // инициализация ширины при загрузке страницы
         updateWidth();
 
-        headerSearch.style.width = `${getBodyWidth / 4
-            }px`;
+        headerSearch.style.width = `${
+            getBodyWidth / 4
+        }px`;
 
         formSearch.style.height = '100px';
-        formSearch.style.width = `${getBodyWidth / 4
-            }px`;
+        formSearch.style.width = `${
+            getBodyWidth / 4
+        }px`;
 
-        inputSearch.style.width = `${getBodyWidth / 6
-            }px`;
+        inputSearch.style.width = `${
+            getBodyWidth / 6
+        }px`;
 
         mainElem.style.justifyContent = 'flex-start';
 
@@ -347,12 +392,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (getBodyWidth >= 974) { // desktop
-        h1Element.style.marginLeft = `-${getBodyWidth / 2 * 0.4
-            }px`;
+        h1Element.style.marginLeft = `-${
+            getBodyWidth / 2 * 0.4
+        }px`;
 
         const calcWrapWidth = () => {
-            const availableWidth = getBodyWidth - `${navMenu.clientWidth + articleElem.clientWidth
-                }` - 6;
+            const availableWidth = getBodyWidth - `${
+                navMenu.clientWidth + articleElem.clientWidth
+            }` - 6;
             return `${availableWidth}px`;
 
         }
@@ -383,7 +430,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (getBodyWidth < 810 && getBodyWidth > 600) {
             articleElem.style.width = '599px';
             articleElem.style.margin = '3px auto';
-
 
         }
     }, 1000);
