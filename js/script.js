@@ -126,12 +126,16 @@ const movieDB = {
                     dbLiList[lastClickedIndex].classList.toggle('red');
                     // toggleTrashImage(lastClickedIndex);
                     imgTrashList[lastClickedIndex].classList.toggle('hide');
+                    if(dbLiList[lastClickedIndex].children[0].classList.contains('star')){
+                        dbLiList[lastClickedIndex].children[0].classList.toggle('hide')
+                    }
                     lastClickedIndex = null;
                 }
 
                 const brElementCreate = document.createElement('br'),
                     dbLiElementCreate = document.createElement('li'),
-                    imgTrashElementCreate = document.createElement('img');
+                    imgTrashElementCreate = document.createElement('img'),
+                    imgStarElementCreate = document.createElement('img');
                 // hrElementCreate = document.createElement('hr');
 
                 dbLiElementCreate.classList.add('dbList');
@@ -139,6 +143,10 @@ const movieDB = {
                 imgTrashElementCreate.classList.add('trash');
                 imgTrashElementCreate.setAttribute('src', 'image/trash.png');
                 imgTrashElementCreate.setAttribute('alt', 'image');
+
+                imgStarElementCreate.classList.add('star');
+                imgStarElementCreate.setAttribute('src', 'image/Star.svg');
+                imgStarElementCreate.setAttribute('alt', 'star');
 
                 dbLiElementCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)} (${inputYearFilmElem.value})`;
                 log(`Add to DB: <strong>${
@@ -150,6 +158,11 @@ const movieDB = {
 
                 dbOl.prepend(brElementCreate);
                 dbOl.prepend(dbLiElementCreate)
+
+                if(getFavoriteChecked() === true){
+                    dbLiList[0].prepend(imgStarElementCreate);
+                }
+
 
                 dbLiList[0].append(imgTrashElementCreate);
 
@@ -175,6 +188,8 @@ const movieDB = {
             item.checked = false;
         });
         submitButElem.disabled = true;
+       
+
         return this;
     },
     delFilm: function (e) {
@@ -223,6 +238,9 @@ function clickToLi(e){
         lastClickedIndex = curentIndex;
         if(imgTrashList[curentIndex]){// проход по меню кликом
 
+        if(dbLiList[curentIndex].children[0].classList.contains('star')){
+            dbLiList[curentIndex].children[0].classList.toggle('hide')// если star true то скрываем ее под корзиной по клику на li
+        }
         imgTrashList[curentIndex].classList.toggle('hide');// показывает по клику
         dbLiList[curentIndex].classList.add('red');
         }
@@ -231,11 +249,21 @@ function clickToLi(e){
         }
     }
     else{// проход по меню кликом
-        if(lastClickedIndex != curentIndex){
+        if(lastClickedIndex !== curentIndex){
+           
         dbLiList[lastClickedIndex].classList.remove('red');// последний черный
         dbLiList[curentIndex].classList.add('red');// текущий красим
         imgTrashList[lastClickedIndex].classList.toggle('hide');// последний скрываем
         imgTrashList[curentIndex].classList.toggle('hide');// текущий показываем
+
+        if(dbLiList[curentIndex].children[0].classList.contains('star')){
+            dbLiList[curentIndex].children[0].classList.toggle('hide') // cкрываю star
+        }
+    
+         if(dbLiList[lastClickedIndex].children[0].classList.contains('star')){
+                dbLiList[lastClickedIndex].children[0].classList.toggle('hide')
+            }
+        
         lastClickedIndex = curentIndex;
         }
        
@@ -248,10 +276,6 @@ function clickToLi(e){
 for (const itemLi of dbLiList) {
     itemLi.addEventListener('click', clickToLi)
 }
-
-
-
-
 
 submitButElem.addEventListener('click', movieDB.addNewFilm);
 
