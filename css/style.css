@@ -258,18 +258,15 @@ main .customize {
     margin-bottom: 3px;
 
 }
-.num{
-    /* counter-increment: my-counter; */
 
-}
 .db ol {
     
 
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 5px;
-    list-style-type: decimal;
-    counter-reset: my-counter;
+    /* list-style-type: decimal; */
+    /* counter-reset: my-counter; */
     /* сбросить счетчик */
 
 }
@@ -282,12 +279,12 @@ main .customize {
     padding-bottom: 5px;
     padding-right: 0;
     display: inline;
-    counter-increment: my-counter;
+    /* counter-increment: my-counter; */
     /* увеличить счетчик */
 }
 
     .db li:before {
-        content: counter(my-counter) '.';
+        /* content: counter(my-counter) '.'; */
         /* отобразить значение счетчика */
         display: inline-block;
         width: 1em;
@@ -305,8 +302,43 @@ main .customize {
 position: relative;
 }
 
-.dbList img {
+                   ol .subList {
+                        /* display: none; */
+                        list-style-type: decimal;
+                        counter-reset: my-counter;
+                     /* сбросить счетчик */
+                    }
+                    ol .liList{
+                        position: relative;
+                         counter-increment: my-counter;
+                         margin-left: 25px;
+                         /* padding-left: 10px; */
+                         /* увеличить счетчик */
+                    }
+                    ol .liList :before {
+                        content: counter(my-counter) '.';
+                        /* отобразить значение счетчика */
+                        /* display: inline-block; */
+                        /* width: 1em; */
+                        /* margin-right: 0.5em; */
+                        /* text-align: right; */
+                    }
+
+                     .trash, .star {
+                        position: absolute;
+                        top: -4px;
+                        left: -50px;
+                        z-index: 1;
+                    }
+                    .star{
+                        
+
+                    }
+
+.wrapsubList{
     /* display: none; */
+}
+/* .dbList img {
     margin-top: -4px;
     margin-left: 10px;
     vertical-align: middle;
@@ -314,17 +346,17 @@ position: relative;
     top: 4px;
     left: -35px;
     z-index: 1;
-}
+} */
 
 .hide {
     display: none;
 }
-.trash{
+/* .trash{
     position: absolute;
     top: 4px;
     left: -35px;
     z-index: 1;
-}
+} */
 
 .red {
     color: red;
@@ -389,4 +421,30 @@ footer a:hover {
     }
 
 
+}
+
+
+/* experiment */
+/* @counter-style plus {
+  system: cyclic;
+  symbols: "\271A";
+  suffix: " ";
+} */
+
+.new_list ul {
+    display: flex;
+    flex-direction: column;
+    color: black;
+    list-style-type: none;
+}
+.new_list img{
+    vertical-align: middle;
+    margin: 5px;
+}
+.new_list a {
+color:black;
+text-decoration: none;
+}
+.new_list a:hover{
+    color:red
 }

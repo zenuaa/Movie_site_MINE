@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 'use strict';
 // do rebase
+=======
+'closeYear strict';
+>>>>>>> d207133 (v 1.1)
 
 const getBodyWidth = document.body.clientWidth;
 const getElem = (id) => {
@@ -75,7 +79,9 @@ submitButElem.disabled = true;
 const movieDB = {
     movies: {
         2018: {
-            "Cold War": true
+            "CCold War": true,
+            "BColdd War": true,
+            "AColddd War": true,
         },
 
         2019: {
@@ -87,6 +93,9 @@ const movieDB = {
             "Another Round": true,
             "The Father": false
         }
+    },
+    initialMovieDB: ()=>{
+        movieDB.movies.keys()
     },
     addNewFilm: function (e) {
 
@@ -107,7 +116,7 @@ const movieDB = {
                 // console.warn("Incorrect input: Incorrect film year input..");
                 //     throw new Error("Incorrect input: Incorrect film year input..");
             } else {
-
+                e.stopPropagation();
                 e.preventDefault();
                 const getFavoriteChecked = ()=>{
                     for(let i=0; i < radioElements.length; i++){
@@ -169,7 +178,7 @@ const movieDB = {
 
 
                 dbLiElementCreate.addEventListener('click', clickToLi);
-                imgTrashElementCreate.addEventListener('click', movieDB.delFilm)
+                imgTrashElementCreate.addEventListener('click', movieDB.delFilm, {once: true})
                 
                 
                
@@ -211,6 +220,123 @@ const movieDB = {
 
 };
 
+
+// EXPERIMENT
+// function toggleMenu() {
+//     var menu = document.getElementById("menuDB");
+//     menu.classList.toggle("open"); // Добавляем или удаляем класс "open"
+//   }
+
+const movieDBElement = getElem('#movieDB'),
+yearList = Object.keys(movieDB.movies);
+// subListElement = getElem('.subList'),
+// wrapsubListElement = getElem('.wrapsubList');
+// yearListElement = document.getElementsByClassName('.yearList');
+
+function createListYear(){
+    yearList.forEach((year)=>{
+        console.log(year);
+        
+        const yearListElementCreate = document.createElement('li'),
+        imgPlusElementCreate = document.createElement('img');
+
+        yearListElementCreate.classList.add('yearList');
+        yearListElementCreate.textContent = year;
+
+        imgPlusElementCreate.setAttribute('src', './image/plus.png');
+        imgPlusElementCreate.setAttribute('alt', 'plus');
+
+
+        movieDBElement.append(yearListElementCreate);
+        yearListElementCreate.prepend(imgPlusElementCreate);
+        
+    })
+}
+createListYear();
+
+const yearListElement = getElem('.yearList');
+
+
+movieDBElement.addEventListener('click', (e)=>{
+    const wrapElemCreate = document.createElement('div'),
+            subListElemCreate = document.createElement('ol'),
+            liListItemCreate = document.createElement('li'),
+            trashElemCreate = document.createElement('img'),
+            starElemCreate = document.createElement('img');
+
+
+    if(e.target.getAttribute('alt') === 'plus'){
+        
+            wrapElemCreate.classList.add('wrapsubList', 'hide');
+
+            subListElemCreate.classList.add('subList');
+
+            liListItemCreate.classList.add('liList');
+
+            trashElemCreate.classList.add('trash');
+            trashElemCreate.setAttribute('src', './image/trash.png')
+            trashElemCreate.setAttribute('alt', 'trash');
+
+            starElemCreate.classList.add('star');
+            starElemCreate.setAttribute('src', './image/Star.svg')
+            starElemCreate.setAttribute('alt', 'star')
+
+            // input
+            e.target.parentNode.append(wrapElemCreate);
+            wrapElemCreate.append(subListElemCreate);
+            
+            console.log(e.target.parentNode.textContent);
+
+            const  addMovieElem = ()=>{
+                const arr = Object.entries(movieDB.movies[e.target.parentNode.textContent]);
+                console.log(arr);
+                  arr.sort((a, b) => {
+                    const warNameA = a[0];
+                    const warNameB = b[0];
+                    // Compare the war names
+                    if (warNameA < warNameB) {
+                      return -1; // a should come before b
+                    }
+                    if (warNameA > warNameB) {
+                      return 1; // b should come before a
+                    }
+                    return 0; // a and b are equal
+                  });
+                  
+                  console.log(arr);
+                  
+                arr.forEach((item)=>{
+                console.log(item[0]);
+                liListItemCreate.textContent = `${item[0]}`
+                liListItemCreate.prepend(trashElemCreate.cloneNode(true));
+                subListElemCreate.append(liListItemCreate.cloneNode(true));
+                });
+                
+                
+            }
+            addMovieElem();
+            
+            e.target.setAttribute('src', './image/minus.png')
+            e.target.setAttribute('alt', 'minus')     
+            console.dir(e.target);
+            console.log(e.target.nextElementSibling);
+            
+            
+            e.target.nextElementSibling.classList.toggle('hide');
+    }
+    else{
+    if(e.target.getAttribute('alt') === 'minus' ){
+        e.target.setAttribute('src', './image/plus.png')
+        e.target.setAttribute('alt', 'plus')
+        e.target.nextElementSibling.remove();
+        
+
+    }
+}
+})
+  
+// EXPERIMENT
+
 radioElements.forEach(item=>{
     item.addEventListener('click', ()=>{
         submitButElem.disabled = false;
@@ -234,7 +360,11 @@ function isYear(input) { // проверяем, соответствует ли 
 let lastClickedIndex = null;
 
 function clickToLi(e){
+    e.stopPropagation();
+    e.preventDefault();
     let curentIndex = Array.from(dbLiList).indexOf(e.target);
+    
+    
     if(lastClickedIndex === null){// проход по меню кликом
         lastClickedIndex = curentIndex;
         if(imgTrashList[curentIndex]){// проход по меню кликом
@@ -253,12 +383,18 @@ function clickToLi(e){
         if(lastClickedIndex !== curentIndex){
            
         dbLiList[lastClickedIndex].classList.remove('red');// последний черный
+        // e.target.classList.add('red');// текущий красим
         dbLiList[curentIndex].classList.add('red');// текущий красим
         imgTrashList[lastClickedIndex].classList.toggle('hide');// последний скрываем
         imgTrashList[curentIndex].classList.toggle('hide');// текущий показываем
 
+
         if(dbLiList[curentIndex].children[0].classList.contains('star')){
+            // if(e.target.children[0].classList.contains('star')){
+
             dbLiList[curentIndex].children[0].classList.toggle('hide') // cкрываю star
+            // e.target.children[0].classList.toggle('hide') // cкрываю star
+
         }
     
          if(dbLiList[lastClickedIndex].children[0].classList.contains('star')){
@@ -281,7 +417,7 @@ for (const itemLi of dbLiList) {
 submitButElem.addEventListener('click', movieDB.addNewFilm);
 
 for (const item of imgTrashList) {
-    item.addEventListener('click', movieDB.delFilm)
+    item.addEventListener('click', movieDB.delFilm,  {once: true})
 }
 
 
