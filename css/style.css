@@ -275,20 +275,15 @@ position: relative;
                         /* отобразить значение счетчика */
                        
                     }
-                    /* .liList :hover {
-                        text-decoration: underline;
-                        color:rgb(255, 217, 0)
-                    } */
 
                      .trash, .star {
                         position: absolute;
-                        top: -4px;
+                        top: -1px;
                         left: -50px;
                         z-index: 1;
                     }
-                    .trash{
-                        display: none;
-                    }
+                    
+                
                     .star{
                        
                     }
@@ -379,11 +374,20 @@ footer a:hover {
 }
 #movieDB img{
     vertical-align: middle;
-    margin: 5px;
+    margin: 4px;
+    margin-right: 6px;
+
+    margin-top: 0px;
 }
 #movieDB a {
 color:black;
 text-decoration: none;
+}
+
+#movieDB a:hover{
+    text-decoration: underline;
+    color: red
+
 }
 #movieDB p:hover, .activeYear{
     color: green;
@@ -396,17 +400,11 @@ text-decoration: none;
     color: green;
     font-weight: bolder;
 }
-.yearList img{
+#movieDB .yearList img{
     cursor: pointer;
 }
 
-#movieDB a {
-    color: black;
-    
-    text-decoration: none;
-}
-#movieDB a:hover{
-    text-decoration: underline;
+#movieDB .activMovie{
     color: red;
-
+    text-decoration: underline;
 }
