@@ -47,11 +47,12 @@ const headerElem = getElem('header'),
 
     customizeElem = getElem('.customize'),
     customizeDBFieldsetElem = getElem('.customizeDB fieldset'),
-    imgTrashList = document.getElementsByClassName('trash'),
 
     articleElem = getElem('article'),
     adElements = getElemS('.ad'),
     ad_arr = [];
+
+    let lastClickedElem = null;
 
 adElements.forEach(item => {
     ad_arr.push(item.children[0])
@@ -202,24 +203,30 @@ const movieDB = {
 
         //     return this;
         // },
-        delFilm: function (e) {
-            // delete movieDB.movies[movieDB.getMovieYear(lastClickedElem)][movieDB.getMovieName(lastClickedElem)];
-            // log(`<span class='error'> Removed from DB:</span> <strong>${
-            //     movieDB.getMovieName(lastClickedElem)
-            // }</strong> `);
-            // outputFieldScroll();
-            // e.target.parentNode.nextElementSibling.remove(); // del br
-            // e.target.parentNode.remove(); // del li
-            // lastClickedElem = null;
+        delFilm: function () {
+            movieDB.movies
+            // console.dir(lastClickedElem.parentNode.parentNode.childElementCount)
+              if(lastClickedElem.parentNode.parentNode.childElementCount === 1){                
+                lastClickedElem.parentNode.parentNode.parentNode.parentNode.remove();
+            }
+
+            delete movieDB.movies[movieDB.getMovieYear()][movieDB.getMovieName()];
+            lastClickedElem.parentNode.remove();
+            
+             log(`<span class='error'> Removed from DB:</span> <strong>${
+                movieDB.getMovieName()
+            }</strong> `);
+            outputFieldScroll();
+
+            lastClickedElem = null;
 
 
         },
-        getMovieName: function (index) {
-            return dbLiList[index].textContent.slice(0, dbLiList[index].textContent.length - 7);
+        getMovieName: function () {
+             return lastClickedElem.parentNode.textContent
         },
-        getMovieYear: function (index) {
-            return dbLiList[index].textContent.slice(dbLiList[index].textContent.length - 5, dbLiList[index].textContent.length - 1);
-
+        getMovieYear: function () {
+               return lastClickedElem.parentNode.parentNode.parentNode.parentNode.querySelector('.activeYear').textContent;
         }
 
     };
@@ -263,7 +270,7 @@ const movieDB = {
     createListYear();
 
     // const yearListElement = getElem('.yearList');
-    let lastClickedElem = null;
+   
 
 
     movieDBElement.addEventListener('click', (e) => {
@@ -272,7 +279,12 @@ const movieDB = {
             liListItemCreate = document.createElement('li'),
             trashElemCreate = document.createElement('img'),
             starElemCreate = document.createElement('img'),
-            movieDBLinkCreate = document.createElement('a');
+            movieDBLinkCreate = document.createElement('a'),
+
+            imgTrashList = document.getElementsByClassName('trash');
+
+           
+        
 
         if (e.target.getAttribute('alt') === 'plus') { // развернуть список
 
@@ -369,6 +381,9 @@ const movieDB = {
                     });
                 
             }
+            for (const item of imgTrashList) {
+                item.addEventListener('click', movieDB.delFilm, {once: true})
+            }
         } else {
             if (e.target.getAttribute('alt') === 'minus') { // свернуть список
                 e.target.setAttribute('src', './image/plus.png')
@@ -404,66 +419,10 @@ const movieDB = {
         }
     }
 
-    // let lastClickedElem = null;
-
-    // function clickToLi(e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     let curentIndex = Array.from(dbLiList).indexOf(e.target);
-
-
-    //     if (lastClickedElem === null) { // проход по меню кликом
-    //         lastClickedElem = curentIndex;
-    //         if (imgTrashList[curentIndex]) { // проход по меню кликом
-
-    //             if (dbLiList[curentIndex].children[0].classList.contains('star')) {
-    //                 dbLiList[curentIndex].children[0].classList.toggle('hide') // если star true то скрываем ее под корзиной по клику на li
-    //             }imgTrashList[curentIndex].classList.toggle('hide'); // показывает по клику
-    //             dbLiList[curentIndex].classList.add('red');
-    //         } else { // если элемент был удален
-    //             lastClickedElem = null;
-    //         }
-    //     } else { // проход по меню кликом
-    //         if (lastClickedElem !== curentIndex) {
-
-    //             dbLiList[lastClickedElem].classList.remove('red');
-    //             // последний черный
-    //             // e.target.classList.add('red');// текущий красим
-    //             dbLiList[curentIndex].classList.add('red'); // текущий красим
-    //             imgTrashList[lastClickedElem].classList.toggle('hide'); // последний скрываем
-    //             imgTrashList[curentIndex].classList.toggle('hide'); // текущий показываем
-
-
-    //             if (dbLiList[curentIndex].children[0].classList.contains('star')) { // if(e.target.children[0].classList.contains('star')){
-
-    //                 dbLiList[curentIndex].children[0].classList.toggle('hide')
-    //                 // cкрываю star
-    //                 // e.target.children[0].classList.toggle('hide') // cкрываю star
-
-    //             }
-
-    //             if (dbLiList[lastClickedElem].children[0].classList.contains('star')) {
-    //                 dbLiList[lastClickedElem].children[0].classList.toggle('hide')
-    //             }
-
-    //             lastClickedElem = curentIndex;
-    //         }
-
-
-    //     }
-    // }
-
-    // for (const itemLi of dbLiList) {
-    //     itemLi.addEventListener('click', clickToLi)
-    // }
-
     submitButElem.addEventListener('click', movieDB.addNewFilm);
 
-    for (const item of imgTrashList) {
-        item.addEventListener('click', movieDB.delFilm, {once: true})
-    }
-
-
+    
+//crossbrowser
     document.addEventListener('DOMContentLoaded', function () {
 
         if (getBodyWidth <= 730) {
