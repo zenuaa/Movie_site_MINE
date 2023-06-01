@@ -270,7 +270,7 @@ position: relative;
                          margin-left: 25px;
                          /* увеличить счетчик */
                     }
-                    ol .liList :before {
+                    ol .liList a :before  {
                         content: counter(my-counter) '.';
                         /* отобразить значение счетчика */
                        
@@ -388,10 +388,25 @@ text-decoration: none;
 #movieDB p:hover, .activeYear{
     color: green;
     font-weight: normal;
+    cursor: default;
     /* text-decoration: underline; */
 }
 
 .activeYear{
     color: green;
     font-weight: bolder;
+}
+.yearList img{
+    cursor: pointer;
+}
+
+#movieDB a {
+    color: black;
+    
+    text-decoration: none;
+}
+#movieDB a:hover{
+    text-decoration: underline;
+    color: red;
+
 }

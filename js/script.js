@@ -83,16 +83,15 @@ const movieDB = {
             "BColdd War": false,
             "AColddd War": true,
         },
+        2020: {
+            "Another Round": true,
+            "The Father": false
+        },
 
         2019: {
             "Portrait of a Lady on Fire": false,
             "Pain and Glory": false
         },
-
-        2020: {
-            "Another Round": true,
-            "The Father": false
-        }
     },
     initialMovieDB: ()=>{
         movieDB.movies.keys()
@@ -273,8 +272,8 @@ movieDBElement.addEventListener('click', (e)=>{
             subListElemCreate = document.createElement('ol'),
             liListItemCreate = document.createElement('li'),
             trashElemCreate = document.createElement('img'),
-            starElemCreate = document.createElement('img');
-
+            starElemCreate = document.createElement('img'),
+            movieDBLinkCreate = document.createElement('a');
 
     if(e.target.getAttribute('alt') === 'plus'){    //развернуть список
         
@@ -291,6 +290,13 @@ movieDBElement.addEventListener('click', (e)=>{
             starElemCreate.classList.add('star');
             starElemCreate.setAttribute('src', './image/Star.svg')
             starElemCreate.setAttribute('alt', 'star')
+
+            
+
+            // movieDBLinkCreate.classList.add('linkMovie');
+            movieDBLinkCreate.setAttribute('href', '#')
+            movieDBLinkCreate.setAttribute('alt', 'filmName')
+
 
             // insert elements
             e.target.parentNode.append(wrapElemCreate);
@@ -319,15 +325,28 @@ movieDBElement.addEventListener('click', (e)=>{
                   
                 arr.forEach((item)=>{
                 console.log(item);
-                liListItemCreate.textContent = `${item[0]}`
+                movieDBLinkCreate.textContent = `${item[0]}`
                 liListItemCreate.prepend(trashElemCreate.cloneNode(true));
+
+                
+                console.log(`${item[0]}`);
+                console.dir(movieDBLinkCreate);
+                
+                // movieDBLinkCreate.insertAdjacentText('afterbegin',`sdfsdg` );
+                // movieDBLinkCreate.textContent = `${item[0]}`;
+                // movieDBLinkCreate.append(movieDBLinkCreate.cloneNode(true));
+                
+
                 if(item[1] === true){ // insert star
                     console.log(item[1]);
                     liListItemCreate.prepend(starElemCreate.cloneNode(true));
                     // console.log(starElemCreate);
                 }
-                subListElemCreate.append(liListItemCreate.cloneNode(true));
                 
+                liListItemCreate.append(movieDBLinkCreate);
+                subListElemCreate.append(liListItemCreate.cloneNode(true));
+
+
                 });
                 
                 
@@ -336,8 +355,8 @@ movieDBElement.addEventListener('click', (e)=>{
             
             e.target.setAttribute('src', './image/minus.png')
             e.target.setAttribute('alt', 'minus')     
-            console.dir(e.target);
-            console.log(e.target.lastElementSibling);
+            // console.dir(e.target);
+            // console.log(e.target.lastElementSibling);
             
             
             e.target.nextElementSibling.classList.toggle('hide');
