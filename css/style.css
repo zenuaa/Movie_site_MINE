@@ -238,14 +238,10 @@ main .customize {
     margin: 20px;
     margin-top: 5px;
     padding: 10px; 
-    /* background-color:#5f5c5c; */
-
 }
 
 .output {
     overflow-wrap: break-word;
-
-    /* color: #fff; */
 }
 
 
@@ -259,51 +255,11 @@ main .customize {
 
 }
 
-.db ol {
-    
-
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-left: 5px;
-    /* list-style-type: decimal; */
-    /* counter-reset: my-counter; */
-    /* сбросить счетчик */
-
-}
-
-.db li {
-    position: relative;
-    margin-left: 20px;
-
-    overflow-wrap: break-word;
-    padding-bottom: 5px;
-    padding-right: 0;
-    display: inline;
-    /* counter-increment: my-counter; */
-    /* увеличить счетчик */
-}
-
-    .db li:before {
-        /* content: counter(my-counter) '.'; */
-        /* отобразить значение счетчика */
-        display: inline-block;
-        width: 1em;
-        margin-right: 0.5em;
-        text-align: right;
-    }
-
-.db li:hover {
-    /* color:rgb(19, 38, 124); */
-    text-decoration: underline;
-    cursor: pointer;
-}
-
 .dblist{
 position: relative;
 }
 
                    ol .subList {
-                        /* display: none; */
                         list-style-type: decimal;
                         counter-reset: my-counter;
                      /* сбросить счетчик */
@@ -312,17 +268,17 @@ position: relative;
                         position: relative;
                          counter-increment: my-counter;
                          margin-left: 25px;
-                         /* padding-left: 10px; */
                          /* увеличить счетчик */
                     }
                     ol .liList :before {
                         content: counter(my-counter) '.';
                         /* отобразить значение счетчика */
-                        /* display: inline-block; */
-                        /* width: 1em; */
-                        /* margin-right: 0.5em; */
-                        /* text-align: right; */
+                       
                     }
+                    /* .liList :hover {
+                        text-decoration: underline;
+                        color:rgb(255, 217, 0)
+                    } */
 
                      .trash, .star {
                         position: absolute;
@@ -330,33 +286,17 @@ position: relative;
                         left: -50px;
                         z-index: 1;
                     }
+                    .trash{
+                        display: none;
+                    }
                     .star{
-                        
-
+                       
                     }
 
-.wrapsubList{
-    /* display: none; */
-}
-/* .dbList img {
-    margin-top: -4px;
-    margin-left: 10px;
-    vertical-align: middle;
-    position: absolute;
-    top: 4px;
-    left: -35px;
-    z-index: 1;
-} */
 
 .hide {
     display: none;
 }
-/* .trash{
-    position: absolute;
-    top: 4px;
-    left: -35px;
-    z-index: 1;
-} */
 
 .red {
     color: red;
@@ -431,20 +371,27 @@ footer a:hover {
   suffix: " ";
 } */
 
-.new_list ul {
+#movieDB {
     display: flex;
     flex-direction: column;
     color: black;
     list-style-type: none;
 }
-.new_list img{
+#movieDB img{
     vertical-align: middle;
     margin: 5px;
 }
-.new_list a {
+#movieDB a {
 color:black;
 text-decoration: none;
 }
-.new_list a:hover{
-    color:red
+#movieDB p:hover, .activeYear{
+    color: green;
+    font-weight: normal;
+    /* text-decoration: underline; */
+}
+
+.activeYear{
+    color: green;
+    font-weight: bolder;
 }

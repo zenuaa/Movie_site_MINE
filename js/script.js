@@ -80,7 +80,7 @@ const movieDB = {
     movies: {
         2018: {
             "CCold War": true,
-            "BColdd War": true,
+            "BColdd War": false,
             "AColddd War": true,
         },
 
@@ -229,28 +229,39 @@ const movieDB = {
 
 const movieDBElement = getElem('#movieDB'),
 yearList = Object.keys(movieDB.movies);
-// subListElement = getElem('.subList'),
-// wrapsubListElement = getElem('.wrapsubList');
-// yearListElement = document.getElementsByClassName('.yearList');
 
 function createListYear(){
     yearList.forEach((year)=>{
         console.log(year);
         
         const yearListElementCreate = document.createElement('li'),
-        imgPlusElementCreate = document.createElement('img');
+        imgPlusElementCreate = document.createElement('img'),
+        yearElem = document.createElement('p');
 
         yearListElementCreate.classList.add('yearList');
-        yearListElementCreate.textContent = year;
+
+        // yearListElementCreate.textContent = year;
 
         imgPlusElementCreate.setAttribute('src', './image/plus.png');
         imgPlusElementCreate.setAttribute('alt', 'plus');
 
+        // yearElem
+        yearElem.style.display = 'inline';
 
-        movieDBElement.append(yearListElementCreate);
+        movieDBElement.prepend(yearListElementCreate);
         yearListElementCreate.prepend(imgPlusElementCreate);
+        yearListElementCreate.firstElementChild.after(yearElem);
+        
+        yearElem.textContent = year;
+        
+
+        
         
     })
+    const yearItem = getElemS('.yearList');
+        console.dir(yearItem);
+
+
 }
 createListYear();
 
@@ -265,9 +276,9 @@ movieDBElement.addEventListener('click', (e)=>{
             starElemCreate = document.createElement('img');
 
 
-    if(e.target.getAttribute('alt') === 'plus'){
+    if(e.target.getAttribute('alt') === 'plus'){    //развернуть список
         
-            wrapElemCreate.classList.add('wrapsubList', 'hide');
+            wrapElemCreate.classList.add('wrapsubList');
 
             subListElemCreate.classList.add('subList');
 
@@ -281,11 +292,12 @@ movieDBElement.addEventListener('click', (e)=>{
             starElemCreate.setAttribute('src', './image/Star.svg')
             starElemCreate.setAttribute('alt', 'star')
 
-            // input
+            // insert elements
             e.target.parentNode.append(wrapElemCreate);
             wrapElemCreate.append(subListElemCreate);
             
-            console.log(e.target.parentNode.textContent);
+            console.log(e.target.parentNode);
+            e.target.parentNode.children[1].classList.toggle('activeYear');
 
             const  addMovieElem = ()=>{
                 const arr = Object.entries(movieDB.movies[e.target.parentNode.textContent]);
@@ -306,10 +318,16 @@ movieDBElement.addEventListener('click', (e)=>{
                   console.log(arr);
                   
                 arr.forEach((item)=>{
-                console.log(item[0]);
+                console.log(item);
                 liListItemCreate.textContent = `${item[0]}`
                 liListItemCreate.prepend(trashElemCreate.cloneNode(true));
+                if(item[1] === true){ // insert star
+                    console.log(item[1]);
+                    liListItemCreate.prepend(starElemCreate.cloneNode(true));
+                    // console.log(starElemCreate);
+                }
                 subListElemCreate.append(liListItemCreate.cloneNode(true));
+                
                 });
                 
                 
@@ -319,16 +337,18 @@ movieDBElement.addEventListener('click', (e)=>{
             e.target.setAttribute('src', './image/minus.png')
             e.target.setAttribute('alt', 'minus')     
             console.dir(e.target);
-            console.log(e.target.nextElementSibling);
+            console.log(e.target.lastElementSibling);
             
             
             e.target.nextElementSibling.classList.toggle('hide');
     }
     else{
-    if(e.target.getAttribute('alt') === 'minus' ){
+    if(e.target.getAttribute('alt') === 'minus' ){  //свернуть список
         e.target.setAttribute('src', './image/plus.png')
         e.target.setAttribute('alt', 'plus')
-        e.target.nextElementSibling.remove();
+        e.target.parentNode.lastElementChild.remove();
+        e.target.parentNode.children[1].classList.toggle('activeYear');
+
         
 
     }
