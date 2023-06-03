@@ -37,12 +37,12 @@ const headerElem = getElem('header'),
     inputYearFilmElem = getElem('#movie_year'),
     submitButElem = getElem('#add_to_DB'),
     radioElements = [
-        getElem('#yes'), getElem('#no')
+        ...document.querySelectorAll('#yes, #no')
     ],
 
 
     // dbOl = getElem('.db ol'),
-    dbLiList = document.getElementsByClassName('dbList'),
+    // dbLiList = document.getElementsByClassName('dbList'),
     dbFieldsetElem = getElem('.db fieldset'),
 
     customizeElem = getElem('.customize'),
@@ -70,16 +70,23 @@ const outputFieldScroll = function () {
     outputFieldElem.scrollTop = outputFieldElem.scrollHeight;
     return getHeight;
 }
+
+const eventClick = new MouseEvent("click", {
+    bubbles: true,
+    cancelable: true,
+    view: window
+    });
+
 submitButElem.disabled = true;
 
 
 const movieDB = {
     movies: {
-        2018: {
+        2015: {
             "Black Panther": true,
             "Avengers: Infinity War": true,
             "A Star is Born": false,
-            "A Quiet Place": true,
+            "Quiet Place": true,
             "The Shape of Water": false
         },
         2020: {
@@ -87,17 +94,12 @@ const movieDB = {
             "The Father": false
         },
 
-        2019: {
+        2010: {
             "Portrait of a Lady on Fire": true,
             "Pain and Glory": false
         }
     },
-    initialMovieDB: () => {
-        movieDB.movies.keys()
-    },
     addNewFilm: function (e) {
-
-
         if (inputNameFilmElem.value.trim() === "") {
             e.preventDefault();
             log("<span class='error'>Error:</span> Film name input - is empty..");
@@ -126,18 +128,17 @@ const movieDB = {
                         return false;
                     }
                 }
-                console.log(movieDB.movies);
+                // console.log(movieDB.movies);
                 
-                if (Object.keys(movieDB.movies).includes(inputYearFilmElem.value)) {
+                if (movieDB.movies[inputYearFilmElem.value]) {
                     movieDB.movies[inputYearFilmElem.value][FirstCharAttoUpper(inputNameFilmElem.value)] = getFavoriteChecked();
-
                 } else {
                     movieDB.movies[inputYearFilmElem.value] = {};
                     movieDB.movies[inputYearFilmElem.value][FirstCharAttoUpper(inputNameFilmElem.value)] = getFavoriteChecked();
-                } 
+                }
                 
 
-                console.log(movieDB.movies);
+                // console.log(movieDB.movies);
                 
                 const wrapElemCreate = document.createElement('div'),
                         subListElemCreate = document.createElement('ol'),
@@ -165,7 +166,56 @@ const movieDB = {
                         movieDBLinkCreate.setAttribute('href', '#')
                         movieDBLinkCreate.setAttribute('alt', 'filmName')
             
-                        // (${inputYearFilmElem.value})
+                       
+                        if(!yearList.includes(inputYearFilmElem.value)){
+                           
+                            for (const item of yearListElements) {
+                                
+                                    const yearListElementCreate = document.createElement('li'),
+                                    imgPlusElementCreate = document.createElement('img'),
+                                    yearElem = document.createElement('p');
+
+                                    yearListElementCreate.classList.add('yearList');
+
+                                    imgPlusElementCreate.setAttribute('src', './image/plus.png');
+                                    imgPlusElementCreate.setAttribute('alt', 'plus');
+
+                                    yearElem.style.display = 'inline';
+                                    yearElem.textContent = inputYearFilmElem.value;
+
+                                    if(inputYearFilmElem.value > item.textContent){
+                                        if(!arrYearList.includes(inputYearFilmElem.value)){
+                                            
+                                            item.before(yearListElementCreate);
+                                        }
+                                    yearListElementCreate.prepend(imgPlusElementCreate);
+                                    yearListElementCreate.firstElementChild.after(yearElem);
+                                    arrYearList.push(inputYearFilmElem.value)
+
+                                    imgPlusElementCreate.dispatchEvent(eventClick); // Имитация клика по элементу Открываем
+                                    break;
+
+                                }
+                               
+
+                                if(item === yearListElements[yearListElements.length-1]){// если нахожусь на последнем году списка то
+                                    if(arrYearList.includes(inputYearFilmElem.value)){//
+                                        break;
+                                    }
+                                    item.after(yearListElementCreate);
+                                    yearListElementCreate.prepend(imgPlusElementCreate);
+                                    yearListElementCreate.firstElementChild.after(yearElem);
+                                    arrYearList.push(inputYearFilmElem.value);
+
+                                    imgPlusElementCreate.dispatchEvent(eventClick); // Имитация клика по элементу Открываем
+
+                                }
+                               
+                            }
+                            
+                            
+                            
+                        }
 
                         movieDBLinkCreate.textContent = `${FirstCharAttoUpper(inputNameFilmElem.value)}`;
 
@@ -178,24 +228,20 @@ const movieDB = {
                         }</strong>`);
                         outputFieldScroll();
 
+                       
 
                         
                         const wrapsubList = getElemS('.wrapsubList');// get open yearList
-                        console.log(wrapsubList);
                         let parentCurentYear;
                         if(wrapsubList.length > 0){
                             wrapsubList.forEach((item)=>{
                             if(item.dataset.year === inputYearFilmElem.value){
                                 parentCurentYear = item.parentNode;
-                                let plusMinusElem = parentCurentYear.firstElementChild;
-                                let event = new MouseEvent("click", {
-                                bubbles: true,
-                                cancelable: true,
-                                view: window
-                                });
-                                plusMinusElem.dispatchEvent(event); // Имитация клика по элементу ЗАКРЫВАЕМ
+                                const plusMinusElem = parentCurentYear.firstElementChild;
+                            
+                                plusMinusElem.dispatchEvent(eventClick); // Имитация клика по элементу ЗАКРЫВАЕМ
                                 plusMinusElem.textContent = inputYearFilmElem;
-                                plusMinusElem.dispatchEvent(event); // Имитация клика по элементу Открываем
+                                plusMinusElem.dispatchEvent(eventClick); // Имитация клика по элементу Открываем
                             }
                             
                         })
@@ -248,39 +294,45 @@ const movieDB = {
 const movieDBElement = getElem('#movieDB'),
     yearList = Object.keys(movieDB.movies);
 
+    
 function createListYear() { // вывод списка по годам
     yearList.forEach((year) => {
-
         const yearListElementCreate = document.createElement('li'),
-                imgPlusElementCreate = document.createElement('img'),
-                yearElem = document.createElement('p');
+        imgPlusElementCreate = document.createElement('img'),
+        yearElem = document.createElement('p');
 
         yearListElementCreate.classList.add('yearList');
-
 
         imgPlusElementCreate.setAttribute('src', './image/plus.png');
         imgPlusElementCreate.setAttribute('alt', 'plus');
 
-        // yearElem
         yearElem.style.display = 'inline';
+        yearElem.textContent = year;
 
         movieDBElement.prepend(yearListElementCreate);
         yearListElementCreate.prepend(imgPlusElementCreate);
         yearListElementCreate.firstElementChild.after(yearElem);
-
-        yearElem.textContent = year;
-
     })
-    // const yearItem = getElemS('.yearList');
 
 }
 createListYear();
 
-// const yearListElement = getElem('.yearList');
+            const yearListElements = document.getElementsByClassName('yearList');
+            const arrYearList = [];
+            // yearListElements.forEach((item)=>{
+            //     arrYearList.push(item.textContent)
+            // })
+            for (const item of yearListElements) {
+                arrYearList.push(item.textContent)
+
+            }
+            arrYearList.sort(function(a, b) {
+                return a - b;
+                });
+                        
 
 
 movieDBElement.addEventListener('click', (e) => {
-    console.log(e.target);
 
     const wrapElemCreate = document.createElement('div'),
         subListElemCreate = document.createElement('ol'),
@@ -401,9 +453,7 @@ movieDBElement.addEventListener('click', (e) => {
             e.target.setAttribute('src', './image/plus.png')
             e.target.setAttribute('alt', 'plus')
             e.target.parentNode.lastElementChild.remove();
-            console.log(e.target.parentNode.lastElementChild);
             
-            console.log(e.target.parentNode);
             
             e.target.parentNode.children[1].classList.toggle('activeYear');
 
