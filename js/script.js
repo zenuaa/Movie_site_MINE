@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 'use strict';
-// do rebase
-=======
-'closeYear strict';
->>>>>>> d207133 (v 1.1)
+
 
 const getBodyWidth = document.body.clientWidth;
 const getElem = (id) => {
